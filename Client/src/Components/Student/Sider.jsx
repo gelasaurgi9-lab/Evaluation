@@ -27,7 +27,7 @@ const Sider = () => {
         <SheetContent side="bottom" className="bg-(--one) max-h-[90vh] overflow-y-auto">
           <SheetHeader>
             <SheetTitle>
-           <p>EVALUATIONS</p>
+           <p>EVALUATION HISTORY</p>
             </SheetTitle>
            
           </SheetHeader>

@@ -56,6 +56,7 @@ const FetchEvaluation = () => {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this evaluation?")) {
       dispatch(deleteEvaluation(id));
+      toast("Deleted SuccessFully")
     }
   };
 

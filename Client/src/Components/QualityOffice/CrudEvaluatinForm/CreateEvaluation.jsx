@@ -170,14 +170,25 @@ const CreateEvaluation = () => {
         return;
       }
 
+      // Convert date strings to Date objects
+      const startDate = new Date(formData.startDate);
+      const endDate = new Date(formData.endDate);
+      
+      // Ensure end date is after start date
+      if (endDate <= startDate) {
+        toast.error('End date must be after start date');
+        setIsSubmitting(false);
+        return;
+      }
+
       const evaluationData = {
         title: formData.title.trim(),
         description: (formData.description || 'No description provided').trim(),
         academicYear: formData.academicYear,
         semester: formData.semester,
         category: formData.category,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
+        startDate: startDate,
+        endDate: endDate,
         status: 'draft',
         createdBy: user._id,
         weights: EVALUATION_WEIGHTS,
@@ -195,11 +206,12 @@ const CreateEvaluation = () => {
         toast.success('Evaluation created successfully!');
         navigate('/quality-office-home');
       } else {
-        const errorMessage = result?.message || 'Failed to create evaluation';
+        const errorMessage = result || 'Failed to create evaluations';
         toast.error(errorMessage);
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to create evaluation');
+      console.log(error)
+      toast.error(error || 'Failed to create evaluation');
     } finally {
       setIsSubmitting(false);
     }

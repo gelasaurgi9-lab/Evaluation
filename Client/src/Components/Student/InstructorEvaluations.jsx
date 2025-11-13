@@ -125,11 +125,9 @@ const InstructorEvaluations = () => {
           courseCode,
         })
       ).unwrap();
-      toast.success("Evaluation submitted successfully!");
       navigate("/");
     } catch (error) {
-      console.error("Submission error:", error);
-      toast.error(error?.message || "Failed to submit evaluation");
+ 
     } finally {
       setIsSubmitting(false);
     }

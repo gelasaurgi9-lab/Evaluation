@@ -66,9 +66,14 @@ const CreateUser = ({ onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Create a copy of form data and remove email if it's empty
+    const submitData = { ...formData };
+    if (!submitData.email) {
+      delete submitData.email;
+    }
 
     try {
-      const resultAction = await dispatch(register(formData));
+      const resultAction = await dispatch(register(submitData));
 
       if (register.fulfilled.match(resultAction)) {
         toast.success('User created successfully!');
@@ -77,7 +82,7 @@ const CreateUser = ({ onSuccess }) => {
           fullName: '',
           username: '',
           email: '',
-          password: '',
+          password: 'Osu@1234',
           role: '',
           department: ''
         });

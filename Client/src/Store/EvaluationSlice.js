@@ -55,38 +55,24 @@ export const createEvaluation = createAsyncThunk(
   async (evaluationData, { rejectWithValue }) => {
     try {
       const response = await axios.post('/evaluation', evaluationData);
-      toast.success('Evaluation created successfully!');
+   
       return response.data;
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to create evaluation');
-      return rejectWithValue(error.response?.data?.message || 'Failed to create evaluation');
+      return rejectWithValue(error.response?.data || 'Failed to create evaluation');
     }
   }
 );
 
-export const updateEvaluation = createAsyncThunk(
-  'evaluations/updateEvaluation',
-  async ({ id, ...updates }, { rejectWithValue }) => {
-    try {
-      const response = await axios.put(`/evaluation/${id}`, updates);
-      toast.success('Evaluation updated successfully!');
-      return response.data;
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update evaluation');
-      return rejectWithValue(error.response?.data?.message || 'Failed to update evaluation');
-    }
-  }
-);
 
 export const deleteEvaluation = createAsyncThunk(
   'evaluations/deleteEvaluation',
   async (id, { rejectWithValue }) => {
     try {
       await axios.delete(`/evaluation/${id}`);
-      toast.success('Evaluation deleted successfully!');
       return id;
+      toast("Deleted Successfully")
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to delete evaluation');
+
       return rejectWithValue(error.response?.data?.message || 'Failed to delete evaluation');
     }
   }
@@ -99,7 +85,6 @@ export const updateEvaluationStatus = createAsyncThunk(
       const response = await axios.patch(`/evaluation/${id}/status`, { status });
       return response.data;
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update status');
       return rejectWithValue(error.response?.data?.message || 'Failed to update status');
     }
   }
@@ -184,20 +169,6 @@ const evaluationSlice = createSlice({
     builder
       .addCase(createEvaluation.fulfilled, (state, action) => {
         state.evaluations.push(action.payload);
-      });
-
-    // Update Evaluation
-    builder
-      .addCase(updateEvaluation.fulfilled, (state, action) => {
-        const index = state.evaluations.findIndex(
-          (evalItem) => evalItem._id === action.payload._id
-        );
-        if (index !== -1) {
-          state.evaluations[index] = action.payload;
-        }
-        if (state.currentEvaluation?._id === action.payload._id) {
-          state.currentEvaluation = action.payload;
-        }
       });
 
     // Delete Evaluation

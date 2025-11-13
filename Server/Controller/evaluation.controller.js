@@ -89,6 +89,20 @@ export const submitEvaluationResponse = async (req, res, next) => {
     // Add response to evaluation
     evaluation.responses.push(response._id);
     evaluation.responseCount = evaluation.responses.length;
+    
+    // Calculate average score from all responses
+    const allResponses = await EvaluationResponse.find({ evaluation: id });
+    if (allResponses.length > 0) {
+      const totalScore = allResponses.reduce((sum, resp) => {
+        const responseTotal = resp.responses.reduce((s, r) => s + (r.rating || 0), 0);
+        const responseAvg = responseTotal / (resp.responses.length || 1);
+        return sum + responseAvg;
+      }, 0);
+      evaluation.averageScore = totalScore / allResponses.length;
+    } else {
+      evaluation.averageScore = 0;
+    }
+    
     await evaluation.save();
 
     res.status(201).json({

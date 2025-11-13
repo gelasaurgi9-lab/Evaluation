@@ -34,8 +34,8 @@ const evaluationResponseSchema = new Schema({
     rating: {
       type: Number,
       required: true,
-      min: 1,
-      max: 5
+      min: 0,
+      max: 100
     },
     comment: {
       type: String,

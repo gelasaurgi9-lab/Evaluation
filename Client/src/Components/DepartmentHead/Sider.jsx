@@ -15,7 +15,7 @@ import CreateUser from "./UserCrud/CreateUser";
 import FetchUser from "./UserCrud/FetchUser";
 import EditUser from "./UserCrud/EditUser";
 import DeleteUser from "./UserCrud/DeleteUser";
-import ViewEvaluation from "./ViewEvaluation";
+import ViewEvaluation from "./ViewEvaluationResult";
 
 const Sider = () => {
   const [open, setOpen] = useState(false);

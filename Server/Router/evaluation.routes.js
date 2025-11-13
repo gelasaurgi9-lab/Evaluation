@@ -17,7 +17,7 @@ router.use(protect);
 
 // Quality Officer routes
 router.route('/').post(authorize('quality_officer'), createEvaluationForm);
-router.route('/').get(authorize('quality_officer',"Student",'instructor'), getAllEvaluationForms);
+router.route('/').get(authorize('quality_officer',"Student",'instructor','department_head'), getAllEvaluationForms);
 router.route('/:id/status').patch(authorize('quality_officer'), updateEvaluationStatus);
 router.route('/:id').delete(authorize('quality_officer'), deleteEvaluationForm);
 

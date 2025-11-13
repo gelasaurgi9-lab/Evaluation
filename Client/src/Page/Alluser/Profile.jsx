@@ -18,7 +18,9 @@ const Users=user
     role: Users?.role ? Users.role.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : 'User',
     avatar: Users?.fullName.charAt(0) || 'User',
   }
-
+const date=new Date(Users.createdAt)
+const DateFormat= `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+console.log(DateFormat)
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -137,7 +139,7 @@ const Users=user
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">About</dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        Created At : {Users.createdAt}
+                        Created At : {DateFormat}
                       </dd>
                     </div>
                   </dl>

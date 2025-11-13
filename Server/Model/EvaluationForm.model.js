@@ -54,7 +54,7 @@ const evaluationFormSchema = new Schema({
       type: Number,
       required: [true, 'Weight is required for each criteria'],
       min: 0,
-      max: 10
+      max: 100
     }
 
   }],
@@ -94,7 +94,7 @@ const evaluationFormSchema = new Schema({
   averageScore: {
     type: Number,
     min: 0,
-    max: 5,
+    max: 100,
     default: 0
   },
   responseCount: {

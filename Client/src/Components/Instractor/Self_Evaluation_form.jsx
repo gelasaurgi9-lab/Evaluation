@@ -94,11 +94,9 @@ const InstructorEvaluationForm = () => {
         evaluatorId: user._id,
         instructorId: user._id // Self-evaluation: evaluator and instructor are the same
       })).unwrap();
-      
-      toast.success('Evaluation submitted successfully!');
       navigate('/instructor-home');
     } catch (error) {
-      // toast.error(error.message || 'Failed to submit evaluation');
+   ``
     }
   };
 

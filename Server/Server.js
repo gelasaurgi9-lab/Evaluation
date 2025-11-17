@@ -14,6 +14,7 @@ app.use(cors({
   origin: "http://localhost:5173", // your frontend URL
   methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
   credentials: true, // if using cookies or auth headers
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(cookieParser());

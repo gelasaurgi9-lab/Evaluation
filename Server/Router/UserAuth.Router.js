@@ -8,6 +8,7 @@ import {
   updateDetails,
   updatePassword,
   logout,
+  updateUserStatus,
 
 } from "../Controller/UserAuth.Controll.js";
 import { protect } from "../Middleware/protect.js";
@@ -27,6 +28,6 @@ router.get("/profile", getMe);
 router.put("/updatedetails", updateDetails);
 router.put('/update-password/:userId', updatePassword);
 router.post("/logout", logout);
-
+router.patch('/:id/status',updateUserStatus);
 
 export default router;

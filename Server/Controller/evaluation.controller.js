@@ -40,7 +40,7 @@ export const createEvaluationForm = async (req, res, next) => {
 export const submitEvaluationResponse = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { responses, overallComment } = req.body;
+    const { responses, overallComment, instructorId } = req.body;
     const userId = req.user.id;
 
     // Get evaluation form
@@ -56,14 +56,21 @@ export const submitEvaluationResponse = async (req, res, next) => {
       return res.status(400).json('This evaluation is not currently active', 400);
     }
 
-    // Check if user has already submitted a response
-    const existingResponse = await EvaluationResponse.findOne({
+    // Check if user has already submitted a response for this specific instructor
+    const existingResponseQuery = {
       evaluation: id,
       $or: [
         { student: userId },
         { instructor: userId }
       ]
-    });
+    };
+    
+    // If instructorId is provided (peer/self evaluation), add it to the query
+    if (instructorId) {
+      existingResponseQuery.instructor = instructorId;
+    }
+    
+    const existingResponse = await EvaluationResponse.findOne(existingResponseQuery);
 
     if (existingResponse) {
       return res.status(400).json('You have already submitted a response for this evaluation', 400);
@@ -78,7 +85,7 @@ export const submitEvaluationResponse = async (req, res, next) => {
     const response = new EvaluationResponse({
       evaluation: id,
       student: evaluation.category !== 'instructors' ? userId : null,
-      instructor: evaluation.category !== 'students' ? userId : null,
+      instructor: instructorId || (evaluation.category !== 'students' ? userId : null),
       courseCode: evaluation.courseCode,
       responses,
       overallComment
@@ -184,16 +191,29 @@ export const deleteEvaluationForm = async (req, res, next) => {
 export const getEvaluationResponses = async (req, res, next) => {
   try {
     const { id } = req.params;
+  
+    const responses = await EvaluationResponse.find({ _id: id })
+      .populate('student', 'fullName email')
+      .populate('instructor', 'fullName email');
+    
+    // If no responses found by _id, try the normal evaluation field query
+    if (responses.length === 0) {
 
-    const responses = await EvaluationResponse.find({ evaluation: id })
-      .populate('student', 'name email')
-      .populate('instructor', 'name email');
-
-    res.status(200).json({
-      success: true,
-      count: responses.length,
-      data: responses
-    });
+      const evalResponses = await EvaluationResponse.find({ evaluation: id })
+        .populate('student', 'fullName email')
+        .populate('instructor', 'name email');
+      res.status(200).json({
+        success: true,
+        count: evalResponses.length,
+        data: evalResponses
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        count: responses.length,
+        data: responses
+      });
+    }
   } catch (error) {
     next(error);
   }

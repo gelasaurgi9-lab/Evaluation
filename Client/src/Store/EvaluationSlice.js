@@ -11,6 +11,7 @@ const initialState = {
   error: null,
   submissionStatus: 'idle', // 'idle' | 'submitting' | 'succeeded' | 'failed'
   evaluation: null,
+  Response:[]
 };
 
 // Async thunks
@@ -92,12 +93,13 @@ export const updateEvaluationStatus = createAsyncThunk(
 
 export const submitEvaluationResponse = createAsyncThunk(
   'evaluations/submitResponse',
-  async ({ id, responses, overallComment, courseCode }, { rejectWithValue }) => {
+  async ({ id, responses, overallComment, courseCode, instructorId }, { rejectWithValue }) => {
     try {
       const response = await axios.post(`/evaluation/${id}/responses`, {
         responses,
         overallComment,
         courseCode,
+        instructorId,
       });
       toast.success('Evaluation submitted successfully!');
       return response.data;
@@ -117,6 +119,26 @@ export const fetchEvaluationsByStudent = createAsyncThunk(
       return response.data.data || response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch evaluations by student');
+    }
+  }
+);
+
+export const fetchResponsesById = createAsyncThunk(
+  'evaluations/fetchResponsesById',
+  async (responseIds, { rejectWithValue }) => {
+    try {
+      // Handle single ID vs array of IDs
+      if (Array.isArray(responseIds)) {
+        // Use bulk endpoint for multiple IDs
+        const response = await axios.post('/evaluation/responses/bulk', { responseIds });
+        return response.data || response.data.data;
+      } else {
+        // Use single endpoint for one ID (evaluation ID, not response ID)
+        const response = await axios.get(`/evaluation/${responseIds}/responses`);
+        return response.data.data || response.data;
+      }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch responses by ID');
     }
   }
 );
@@ -216,6 +238,23 @@ const evaluationSlice = createSlice({
         if (state.currentEvaluation?._id === action.payload._id) {
           state.currentEvaluation = action.payload;
         }
+      })
+
+    // Fetch Responses by ID
+    builder
+      .addCase(fetchResponsesById.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchResponsesById.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // Replace responses instead of appending to prevent duplicates
+        
+          state.Response = action.payload;
+        
+      })
+      .addCase(fetchResponsesById.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });
@@ -226,6 +265,7 @@ export const selectCurrentEvaluation = (state) => state.evaluations.currentEvalu
 export const selectEvaluationStatus = (state) => state.evaluations.status;
 export const selectSubmissionStatus = (state) => state.evaluations.submissionStatus;
 export const selectEvaluationError = (state) => state.evaluations.error;
+export const selectResponses = (state) => state.evaluations.Response;
 
 // Export actions
 export const { resetSubmissionStatus, clearCurrentEvaluation } = evaluationSlice.actions;

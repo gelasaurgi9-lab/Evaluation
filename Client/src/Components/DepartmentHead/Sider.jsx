@@ -16,6 +16,7 @@ import FetchUser from "./UserCrud/FetchUser";
 import EditUser from "./UserCrud/EditUser";
 import DeleteUser from "./UserCrud/DeleteUser";
 import ViewEvaluation from "./ViewEvaluationResult";
+import ViewEvaluationResult from "./ViewEvaluationResult";
 
 const Sider = () => {
   const [open, setOpen] = useState(false);
@@ -142,8 +143,8 @@ const Sider = () => {
                   {renderContent()}
                 </div>
               ) : (
-                <div className="h-full flex items-center justify-center text-gray-500">
-                  Select an option from the menu
+                <div>
+                  <ViewEvaluationResult/>
                 </div>
               )}
             </div>

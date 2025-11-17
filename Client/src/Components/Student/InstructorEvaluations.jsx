@@ -123,6 +123,7 @@ const InstructorEvaluations = () => {
           responses: formattedResponses,
           overallComment,
           courseCode,
+          instructorId: selectedInstructor,
         })
       ).unwrap();
       navigate("/");

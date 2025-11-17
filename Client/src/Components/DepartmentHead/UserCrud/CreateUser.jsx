@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { register, clearError } from '@/Store/AuthUserSlice';
+import AllInstructor from '../Tabs/AllInstructor';
 
 const CreateUser = ({ onSuccess }) => {
   const dispatch = useDispatch();

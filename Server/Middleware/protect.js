@@ -5,6 +5,8 @@ import UserAuth from "../Model/UserAuth.model.js";
 // Protect routes
 export const protect = async (req, res, next) => {
     try {
+   
+        
         const token = req.cookies?.token;
         let decoded;
 
@@ -12,6 +14,7 @@ export const protect = async (req, res, next) => {
             // If not in cookies, try Authorization header (for backward compatibility)
             const authHeader = req.headers['authorization'];
             const authToken = authHeader && authHeader.split(' ')[1];
+            console.log('Token not in cookies, checking auth header:', authToken ? 'Found' : 'Not found');
             
             if (!authToken) {
                 return res.status(401).json({ 

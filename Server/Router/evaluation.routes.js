@@ -9,6 +9,7 @@ import {
   updateEvaluationStatus
 } from '../Controller/evaluation.controller.js';
 import { protect, authorize } from '../Middleware/protect.js';
+import EvaluationResponse from '../Model/EvaluationResponse.model.js';
 
 const router = express.Router();
 
@@ -29,6 +30,21 @@ router.route('peer-evaluation/:id')
 
 router.route('/:id/responses')
   .post(authorize('Student', 'instructor'), submitEvaluationResponse)
-  .get(authorize('quality_officer'), getEvaluationResponses);
+  .get(authorize('quality_officer','department_head'), getEvaluationResponses);
+  // Bulk fetch responses endpoint
+  router.post('/responses/bulk', authorize('quality_officer','department_head'), async (req, res) => {
+  try {
+    const { responseIds } = req.body;
+    
+    // Fetch response documents from your databasep
+    const responses = await EvaluationResponse.find({ 
+      _id: { $in: responseIds } 
+    });
+    
+   return res.json(responses);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 
 export default router;

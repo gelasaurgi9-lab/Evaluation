@@ -79,6 +79,17 @@ export const updateUserPassword = createAsyncThunk(
     }
   }
 );
+export const updateInstructrStatus = createAsyncThunk(
+  'user/updateStatus',
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(`/auth/${id}/status`, { status });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to update status');
+    }
+  }
+);
 
 const usersDataSlice = createSlice({
   name: 'usersData',
@@ -153,9 +164,29 @@ builder.addCase(updateUserPassword.rejected, (state, action) => {
   state.isLoading = false;
   state.error = action.payload;
 });
+
+    // Update instructor status
+    builder.addCase(updateInstructrStatus.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateInstructrStatus.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      // Update the user in the users array if needed
+      if (action.payload.data) {
+        const updatedUserIndex = state.users.findIndex(user => user._id === action.payload.data._id);
+        if (updatedUserIndex !== -1) {
+          state.users[updatedUserIndex] = action.payload.data;
+        }
+      }
+    });
+    builder.addCase(updateInstructrStatus.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
   },
 });
-
 
 export const { clearCurrentUser } = usersDataSlice.actions;
 

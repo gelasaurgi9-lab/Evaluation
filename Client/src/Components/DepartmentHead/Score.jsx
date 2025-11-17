@@ -1,88 +1,108 @@
 import React from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip';
-import { Info } from 'lucide-react';
+import { Info, User, UserCheck, Users, UserCog } from 'lucide-react';
 
-const Score = ({ evaluatorScores, instructorId }) => {
-  // Default values if no scores are provided
+const Score = ({ evaluatorScores = {}, hasEvaluations = true }) => {
+
+  console.log(evaluatorScores)
+  // If there are no evaluations or no scores, show a message
+  if (!hasEvaluations || !evaluatorScores || Object.keys(evaluatorScores).length === 0) {
+    return (
+      <div className="text-sm text-muted-foreground">
+        No evaluations available
+      </div>
+    );
+  }
+  // Process scores with default values and calculate individual scores
   const scores = {
-    student: 0,
-    self: 0,
-    staff: 0,
-    supervisor: 0,
+    student: {
+      value: evaluatorScores.student || 0,
+      label: 'Students',
+      icon: <Users className="h-3 w-3 mr-1" />
+    },
+    self: {
+      value: evaluatorScores.self || 0,
+      label: 'Self',
+      icon: <User className="h-3 w-3 mr-1" />
+    },
+    staff: {
+      value: evaluatorScores.staff || 0,
+      label: 'Staff',
+      icon: <Users className="h-3 w-3 mr-1" />
+    },
+    supervisor: {
+      value: evaluatorScores.supervisor || 0,
+      label: 'Supervisor',
+      icon: <UserCog className="h-3 w-3 mr-1" />
+    }
   };
 
-  // Only process if we have evaluator scores for this specific instructor
-  if (evaluatorScores && evaluatorScores[instructorId]) {
-    const instructorScores = evaluatorScores[instructorId];
-    scores.student = instructorScores.student || 0;
-    scores.self = instructorScores.self || 0;
-    scores.staff = instructorScores.staff || 0;
-    scores.supervisor = instructorScores.supervisor || 0;
-  }
-
   // Calculate overall average only for non-zero scores
-  const validScores = Object.values(scores).filter(score => score > 0);
+  const validScores = Object.values(scores)
+    .map(score => score.value)
+    .filter(score => score > 0);
+    
   const overallAverage = validScores.length > 0 
     ? (validScores.reduce((a, b) => a + b, 0) / validScores.length).toFixed(1)
     : 'N/A';
 
   const getScoreColor = (score) => {
-    if (score === 0) return 'text-gray-400'; // Gray for no score
+    if (score === 0) return 'text-gray-400';
     if (score >= 85) return 'text-green-600 font-medium';
     if (score >= 70) return 'text-blue-600';
     if (score >= 50) return 'text-yellow-600';
     return 'text-red-600';
   };
 
+  const formatScore = (value) => {
+    return value > 0 ? `${value.toFixed(1)}%` : 'N/A';
+  };
+
   return (
-    <div className="flex flex-col space-y-1">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium">Overall:</span>
+    <div className="space-y-2">
+      {/* Overall Score */}
+      <div className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
+        <div className="flex items-center">
+          <UserCheck className="h-4 w-4 mr-2 text-primary" />
+          <span className="font-medium">Overall Score</span>
+        </div>
         <span className={`text-base font-semibold ${getScoreColor(overallAverage)}`}>
           {overallAverage}%
         </span>
       </div>
-      
-      <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
-        <div className="flex items-center">
-          <span className="w-16">Students:</span>
-          <span className={getScoreColor(scores.student)}>
-            {scores.student > 0 ? `${scores.student.toFixed(1)}%` : 'N/A'}
-          </span>
-        </div>
-        
-        <div className="flex items-center">
-          <span className="w-16">Self:</span>
-          <span className={getScoreColor(scores.self)}>
-            {scores.self > 0 ? `${scores.self.toFixed(1)}%` : 'N/A'}
-          </span>
-        </div>
-        
-        <div className="flex items-center">
-          <span className="w-16">Staff:</span>
-          <span className={getScoreColor(scores.staff)}>
-            {scores.staff > 0 ? `${scores.staff.toFixed(1)}%` : 'N/A'}
-          </span>
-        </div>
-        
-        <div className="flex items-center">
-          <span className="w-16">Supervisor:</span>
-          <span className={getScoreColor(scores.supervisor)}>
-            {scores.supervisor > 0 ? `${scores.supervisor.toFixed(1)}%` : 'N/A'}
-          </span>
-        </div>
+
+      {/* Individual Scores */}
+      <div className="space-y-1.5">
+        {Object.entries(scores).map(([key, { value, label, icon }]) => (
+          <div key={key} className="flex items-center justify-between text-sm">
+            <div className="flex items-center text-muted-foreground">
+              {icon}
+              <span>{label}:</span>
+            </div>
+            <span className={getScoreColor(value)}>
+              {formatScore(value)}
+            </span>
+          </div>
+        ))}
       </div>
-      
+
+      {/* Tooltip */}
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="flex items-center text-xs text-muted-foreground cursor-help">
+            <div className="flex items-center text-xs text-muted-foreground cursor-help pt-1">
               <Info className="h-3 w-3 mr-1" />
-              <span>Score details</span>
+              <span>Score Breakdown</span>
             </div>
           </TooltipTrigger>
           <TooltipContent className="max-w-xs">
-            <p>Shows average scores from different evaluator types. The overall score is an average of all available evaluations for this instructor.</p>
+            <p className="text-sm">
+              <strong>Score Ranges:</strong><br />
+              • 85-100%: Excellent<br />
+              • 70-84%: Good<br />
+              • 50-69%: Needs Improvement<br />
+              • Below 50%: Critical
+            </p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

@@ -41,9 +41,10 @@ const dispatch=useDispatch()
           <Trash2 className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-(--two)">
+      <DialogContent className="sm:max-w-[425px] bg-(--two)" aria-describedby="delete-dialog-description">
         <DialogHeader>
           <DialogTitle>Delete User</DialogTitle>
+          <span id="delete-dialog-description" className="sr-only">Confirmation dialog for deleting a user</span>
           <DialogDescription className="pt-2">
             Are you sure you want to delete this user? This action cannot be undone.
           </DialogDescription>

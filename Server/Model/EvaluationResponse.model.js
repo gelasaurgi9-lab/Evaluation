@@ -26,6 +26,10 @@ const evaluationResponseSchema = new Schema({
     type: String,
     // required: true
   },
+  status:{
+    type:Boolean,
+    default:'false'
+  },
   responses: [{
     criteriaId: {
       type: Schema.Types.ObjectId,

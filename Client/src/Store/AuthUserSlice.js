@@ -49,6 +49,7 @@ export const register = createAsyncThunk(
     try {
       const response = await axiosInstance.post(`/auth/register`, userData);
       return response.data;
+      
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Registration failed');
     }

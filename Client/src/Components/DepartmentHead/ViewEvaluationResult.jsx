@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Overview from './Tabs/Overview' 
 import DetailsView from './Tabs/DetailsView' 
+
 import {
   BarChart,
   Bar,
@@ -45,6 +46,10 @@ import { Badge } from "@/Components/ui/badge";
 import { fetchEvaluations } from "@/Store/EvaluationSlice";
 import { format } from "date-fns";
 import Score from "./Score";
+import AllInstructor from "./Tabs/AllInstructor";
+import ExportingFile from "./Tabs/ExportingFile";
+import ImmediateSupervisorER from "./immediate_Supervisor_ER";
+import { List } from "lucide-react";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
 
@@ -56,8 +61,6 @@ const ViewEvaluationResult = () => {
   );
   const { user } = useSelector((state) => state.auth);
   const { users } = useSelector((state) => state.usersData);
-
-  console.log(user.department);
   const [selectedEvaluation, setSelectedEvaluation] = useState("");
   const [selectedInstructor, setSelectedInstructor] = useState("all");
   const [activeTab, setActiveTab] = useState("overview");
@@ -79,6 +82,8 @@ const ViewEvaluationResult = () => {
       (user) =>
         user.role === "instructor" && user.department === user.department
     ) || [];
+  
+
 
   // Filter evaluations based on selections
   const filteredEvaluations = evaluations.filter((evalItem) => {
@@ -153,6 +158,7 @@ const ViewEvaluationResult = () => {
   if (status === "failed") {
     return (
       <div className="bg-red-50 border-l-4 border-red-500 p-4">
+
         <div className="flex">
           <div className="flex-shrink-0">
             <svg
@@ -271,7 +277,7 @@ const ViewEvaluationResult = () => {
             </svg>
           </CardHeader>
           <CardContent>
-            {console.log(stats)}
+    
             <div className="text-2xl font-bold">
               {stats.averageScore.toFixed(1)}%
             </div>
@@ -300,7 +306,7 @@ const ViewEvaluationResult = () => {
             </svg>
           </CardHeader>
           <CardContent>
-            {console.log(stats)}
+ 
             <div className="text-2xl font-bold">{stats.totalResponses}</div>
 
             <p className="text-xs text-muted-foreground">
@@ -360,7 +366,7 @@ const ViewEvaluationResult = () => {
         onValueChange={setActiveTab}
         className="space-y-4"
       >
-        <TabsList>
+        <TabsList className='bg-(--two)'>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="instructors">By Instructor</TabsTrigger>
           <TabsTrigger value="criteria">By Criteria</TabsTrigger>
@@ -368,6 +374,7 @@ const ViewEvaluationResult = () => {
           <TabsTrigger value="All Instructor in my Department">
             All Instructor in my Department
           </TabsTrigger>
+          <TabsTrigger value="immediate Supervisor" className='bg-green-600 ml-10 text-(--six) cursor-pointer'><List/> immediate Supervisor</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -437,181 +444,20 @@ const ViewEvaluationResult = () => {
         <TabsContent value="details">
           <DetailsView filteredEvaluations={filteredEvaluations}/> 
         </TabsContent>
+     
 
         <TabsContent value="All Instructor in my Department">
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>
-                Instructors in {user?.department || "Your Department"}
-              </CardTitle>
-              <CardDescription>
-                List of all instructors in your department with their evaluation
-                statistics
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Evaluations</TableHead>
-                    <TableHead>Avg. Score</TableHead>
-                    <TableHead>Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {departmentInstructors.length > 0 ? (
-                    departmentInstructors.map((instructor) => {
-                      // First, let's modify the instructorEvals filter
-                      const instructorEvals = evaluations.filter((evalItem) => {
-                        // Check if this evaluation has responses
-                        if (
-                          evalItem.responses &&
-                          evalItem.responses.length > 0
-                        ) {
-                          console.log(
-                            `Evaluation ${evalItem.title} has ${evalItem.responses.length} responses`
-                          );
-                          return true;
-                        }
-                        return false;
-                      });
+       <AllInstructor users={users} departmentInstructors={departmentInstructors} evaluations={evaluations}/>
+      
+        </TabsContent>
 
-                      // Then calculate average scores by evaluator type
-                      const evaluatorScores = {
-                        student: 0,
-                        self: 0,
-                        staff: 0,
-                        supervisor: 0,
-                      };
-
-                      let studentCount = 0;
-                      let selfCount = 0;
-                      let staffCount = 0;
-                      let supervisorCount = 0;
-
-                      instructorEvals.forEach((evalItem) => {
-                        const score = evalItem.averageScore || 0;
-
-                        // Map evaluation category to our score types
-                        if (evalItem.category === "Student") {
-                          evaluatorScores.student += score;
-                          studentCount++;
-                        } else if (evalItem.category === "Self_Evaluation") {
-                          evaluatorScores.self += score;
-                          selfCount++;
-                        } else if (evalItem.category === "College_Team") {
-                          evaluatorScores.staff += score;
-                          staffCount++;
-                        } else if (
-                          evalItem.category === "Immediate_Supervisor"
-                        ) {
-                          evaluatorScores.supervisor += score;
-                          supervisorCount++;
-                        }
-                      });
-
-                      // Calculate averages
-                      if (studentCount > 0)
-                        evaluatorScores.student /= studentCount;
-                      if (selfCount > 0) evaluatorScores.self /= selfCount;
-                      if (staffCount > 0) evaluatorScores.staff /= staffCount;
-                      if (supervisorCount > 0)
-                        evaluatorScores.supervisor /= supervisorCount;
-
-                      // Log the results for debugging
-                      console.log("Calculated scores:", {
-                        evaluatorScores,
-                        counts: {
-                          studentCount,
-                          selfCount,
-                          staffCount,
-                          supervisorCount,
-                        },
-                      });
-
-                      return (
-                        <TableRow key={instructor._id}>
-                          <TableCell className="font-medium">
-                            {`${instructor.fullName}`.trim()}
-                          </TableCell>
-                          <TableCell>{instructor.email || "N/A"}</TableCell>
-                          <TableCell>{instructorEvals.length}</TableCell>
-                          <TableCell>
-                            <Score
-                              evaluatorScores={evaluatorScores}
-                              instructorId={instructor._id}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={
-                                instructor.status === "active"
-                                  ? "default"
-                                  : "secondary"
-                              }
-                              className={`${
-                                instructor.status === "active"
-                                  ? "bg-green-500"
-                                  : "bg-gray-300"
-                              }`}
-                            >
-                              {instructor.status || "inactive"}
-                            </Badge>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-4">
-                        No instructors found in your department
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+           <TabsContent value="immediate Supervisor" >
+         <ImmediateSupervisorER users={users} evaluations={evaluations} />
         </TabsContent>
       </Tabs>
 
       {/* Export and Action Buttons */}
-      <div className="flex justify-end gap-4 mt-6">
-        <button className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 border border-gray-300">
-          <svg
-            className="-ml-1 mr-2 h-5 w-5 text-gray-500"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Export as PDF
-        </button>
-        <button className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 border border-gray-300">
-          <svg
-            className="-ml-1 mr-2 h-5 w-5 text-gray-500"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Export as Excel
-        </button>
-      </div>
+     <ExportingFile/>
     </div>
   );
 };

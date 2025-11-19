@@ -123,6 +123,18 @@ export const fetchEvaluationsByStudent = createAsyncThunk(
   }
 );
 
+export const fetchResponsesByInstructorId = createAsyncThunk(
+  'evaluations/fetchResponsesByInstructorId',
+  async (instructorId, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('/evaluation/instructor-responses', { InstructorId: instructorId });
+      return response.data.data || response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch responses by instructor ID');
+    }
+  }
+);
+
 export const fetchResponsesById = createAsyncThunk(
   'evaluations/fetchResponsesById',
   async (responseIds, { rejectWithValue }) => {
@@ -255,6 +267,19 @@ const evaluationSlice = createSlice({
       .addCase(fetchResponsesById.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      // Fetch Responses by Instructor ID
+      .addCase(fetchResponsesByInstructorId.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchResponsesByInstructorId.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // Replace responses with instructor-specific responses
+        state.Response = action.payload;
+      })
+      .addCase(fetchResponsesByInstructorId.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });
@@ -268,6 +293,8 @@ export const selectEvaluationError = (state) => state.evaluations.error;
 export const selectResponses = (state) => state.evaluations.Response;
 
 // Export actions
+// export { fetchEvaluations, fetchEvaluationById, fetchEvaluationsByStudent, fetchResponsesById, fetchResponsesByInstructorId, submitEvaluationResponse, createEvaluation, deleteEvaluation, updateEvaluationStatus };
+
 export const { resetSubmissionStatus, clearCurrentEvaluation } = evaluationSlice.actions;
 
 export default evaluationSlice.reducer;

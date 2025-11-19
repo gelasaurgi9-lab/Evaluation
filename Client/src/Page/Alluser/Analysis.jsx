@@ -1,20 +1,31 @@
-import React, { useEffect } from 'react';
-import { Users, ClipboardCheck, FileText, TrendingUp, User } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllUsers } from '@/Store/UsersDataSlice';
-import { fetchEvaluations } from '@/Store/EvaluationSlice';
+import React, { useEffect } from "react";
+import {
+  Users,
+  ClipboardCheck,
+  FileText,
+  TrendingUp,
+  User,
+} from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllUsers } from "@/Store/UsersDataSlice";
+import { fetchEvaluations } from "@/Store/EvaluationSlice";
 
 const Analysis = () => {
-  const {users}=useSelector(state=>state.usersData)
-    const { evaluations } = useSelector((state) => state.evaluations);
-    const dispatch=useDispatch()
-    useEffect(() => {
-      dispatch(fetchAllUsers());
-      dispatch(fetchEvaluations());
-    }, [dispatch]);
-    const instructors = users.filter(user => user.role === "instructor");
-    const students = users.filter(user => user.role === "Student");
-   
+  const { users } = useSelector((state) => state.usersData);
+  const { user } = useSelector((state) => state.auth);
+  const { evaluations } = useSelector((state) => state.evaluations);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAllUsers());
+    dispatch(fetchEvaluations());
+  }, [dispatch]);
+  const instructorsInDep = users.filter((U) => U.role === "instructor" && user.department === U.department );
+  const Allinstructors = users.filter((user) => user.role === "instructor");
+  const studentInDep = users.filter(
+    (U) => U.role === "Student" && user.department === U.department
+  );
+  const AllStudent = users.filter((U) => U.role === "Student");
+
 
   return (
     <div className="p-6">
@@ -24,7 +35,11 @@ const Analysis = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Instructors</p>
-              <p className="text-3xl font-bold text-gray-900">{instructors.length}</p>
+              <p className="text-3xl font-bold text-gray-900">
+             {user.role === "quality_officer"
+                ? Allinstructors.length
+                : instructorsInDep.length}
+              </p>
             </div>
             <div className="bg-blue-100 rounded-full p-3">
               <Users className="h-8 w-8 text-blue-600" />
@@ -36,7 +51,9 @@ const Analysis = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Evaluations</p>
-              <p className="text-3xl font-bold text-gray-900">{evaluations.length}</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {evaluations.length}
+              </p>
             </div>
             <div className="bg-green-100 rounded-full p-3">
               <ClipboardCheck className="h-8 w-8 text-green-600" />
@@ -48,7 +65,7 @@ const Analysis = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Completed</p>
-              <p className="text-3xl font-bold text-gray-900">67</p>
+              <p className="text-3xl font-bold text-gray-900">0</p>
             </div>
             <div className="bg-purple-100 rounded-full p-3">
               <FileText className="h-8 w-8 text-purple-600" />
@@ -60,7 +77,9 @@ const Analysis = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Students</p>
-              <p className="text-3xl font-bold text-gray-900">{students.length}</p>
+              {user.role === "quality_officer"
+                ? AllStudent.length
+                : studentInDep.length}
             </div>
             <div className="bg-orange-100 rounded-full p-3">
               <User className="h-8 w-8 text-orange-600" />

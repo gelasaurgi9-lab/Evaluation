@@ -51,10 +51,10 @@ const Peer_Evaluation_form = () => {
     evaluation?.criteria?.reduce((sum, criterion) => {
       const response = responses[criterion._id];
       const score = response?.rating || 0;
-      return sum + score;
+      return sum += score;
     }, 0) || 0;
-
   const handleResponseChange = (criteriaId, value) => {
+    console.log(value)
     setResponses(prev => ({
       ...prev,
       [criteriaId]: {

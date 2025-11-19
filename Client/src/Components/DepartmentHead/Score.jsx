@@ -17,22 +17,22 @@ const Score = ({ evaluatorScores = {}, hasEvaluations = true }) => {
   const scores = {
     student: {
       value: evaluatorScores.student || 0,
-      label: 'Students',
+      label: 'Students 40%',
       icon: <Users className="h-3 w-3 mr-1" />
     },
     self: {
       value: evaluatorScores.self || 0,
-      label: 'Self',
+      label: 'Self 10%',
       icon: <User className="h-3 w-3 mr-1" />
     },
     staff: {
       value: evaluatorScores.staff || 0,
-      label: 'Staff',
+      label: 'Staff :30%',
       icon: <Users className="h-3 w-3 mr-1" />
     },
     supervisor: {
       value: evaluatorScores.supervisor || 0,
-      label: 'Supervisor',
+      label: 'Supervisor 20%',
       icon: <UserCog className="h-3 w-3 mr-1" />
     }
   };
@@ -43,7 +43,7 @@ const Score = ({ evaluatorScores = {}, hasEvaluations = true }) => {
     .filter(score => score > 0);
     
   const overallAverage = validScores.length > 0 
-    ? (validScores.reduce((a, b) => a + b, 0) / validScores.length).toFixed(1)
+    ? (validScores.reduce((a, b) => a + b, 0))
     : 'N/A';
 
   const getScoreColor = (score) => {
@@ -67,7 +67,7 @@ const Score = ({ evaluatorScores = {}, hasEvaluations = true }) => {
           <span className="font-medium">Overall Score</span>
         </div>
         <span className={`text-base font-semibold ${getScoreColor(overallAverage)}`}>
-          {overallAverage}%
+          {overallAverage.toFixed(2)}%
         </span>
       </div>
 

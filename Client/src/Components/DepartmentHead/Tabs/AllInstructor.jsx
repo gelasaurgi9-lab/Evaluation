@@ -108,7 +108,7 @@ const AllInstructor = ({ user, departmentInstructors, evaluations }) => {
         Student: "student",
         Self_Evaluation: "self",
         College_Team: "staff",
-        Immediate_Supervisor: "supervisor",
+        Immediate_Supervisior: "supervisor",
       };
 
       const scoreType = categoryMap[evalItem.category];

@@ -117,7 +117,7 @@ const ViewEvaluationResult = () => {
       filteredEvaluations.reduce(
         (acc, curr) => acc + (curr.averageScore || 0),
         0
-      ) / (filteredEvaluations.length || 1),
+      ) ,
     totalResponses: filteredEvaluations.reduce(
       (acc, curr) => acc + (curr.responseCount || 0),
       0
@@ -280,6 +280,7 @@ const ViewEvaluationResult = () => {
     
             <div className="text-2xl font-bold">
               {stats.averageScore.toFixed(1)}%
+
             </div>
             <p className="text-xs text-gray-300">Across all evaluations</p>
           </CardContent>
@@ -368,8 +369,6 @@ const ViewEvaluationResult = () => {
       >
         <TabsList className='bg-(--two)'>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="instructors">By Instructor</TabsTrigger>
-          <TabsTrigger value="criteria">By Criteria</TabsTrigger>
           <TabsTrigger value="details">Detailed View</TabsTrigger>
           <TabsTrigger value="All Instructor in my Department">
             All Instructor in my Department
@@ -379,66 +378,6 @@ const ViewEvaluationResult = () => {
 
         <TabsContent value="overview" className="space-y-4">
           <Overview filteredEvaluations={filteredEvaluations} stats={stats}/>
-        </TabsContent>
-
-        <TabsContent value="instructors" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance by Instructor</CardTitle>
-            </CardHeader>
-            <CardContent className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={scoreByInstructor}
-                  layout="vertical"
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" />
-                  <YAxis dataKey="name" type="category" width={150} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="score" name="Average Score" fill="#82ca9d">
-                    {scoreByInstructor.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="criteria" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance by Criteria</CardTitle>
-            </CardHeader>
-            <CardContent className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={scoreByCriteria}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="score"
-                    name="Average Score"
-                    stroke="#8884d8"
-                    activeDot={{ r: 8 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         <TabsContent value="details">

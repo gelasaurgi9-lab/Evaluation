@@ -6,7 +6,8 @@ import {
   getEvaluationResponses,
   getAllEvaluationForms,
   deleteEvaluationForm,
-  updateEvaluationStatus
+  updateEvaluationStatus,
+  getEvaluationResponceByUserId
 } from '../Controller/evaluation.controller.js';
 import { protect, authorize } from '../Middleware/protect.js';
 import EvaluationResponse from '../Model/EvaluationResponse.model.js';
@@ -29,14 +30,19 @@ router.route('peer-evaluation/:id')
   .get(authorize('instructor'), getEvaluationForm);
 
 router.route('/:id/responses')
-  .post(authorize('Student', 'instructor'), submitEvaluationResponse)
-  .get(authorize('quality_officer','department_head'), getEvaluationResponses);
-  // Bulk fetch responses endpoint
-  router.post('/responses/bulk', authorize('quality_officer','department_head'), async (req, res) => {
+  .post(authorize('Student', 'instructor','department_head'), submitEvaluationResponse)
+  .get(authorize('quality_officer','department_head','instructor'), getEvaluationResponses);
+
+// Route to get evaluation responses by instructor ID
+router.route('/instructor-responses')
+  .post(authorize('quality_officer','department_head','instructor'), getEvaluationResponceByUserId);
+
+// Bulk fetch responses endpoint
+router.post('/responses/bulk', authorize('quality_officer','department_head','instructor'), async (req, res) => {
   try {
     const { responseIds } = req.body;
     
-    // Fetch response documents from your databasep
+    // Fetch response documents from your database
     const responses = await EvaluationResponse.find({ 
       _id: { $in: responseIds } 
     });

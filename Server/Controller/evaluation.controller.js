@@ -231,3 +231,39 @@ export const updateEvaluationStatus=async(req,res)=>{
        next(error);
      }
 }
+export const getEvaluationResponceByUserId = async (req, res, next) => {
+  try {
+    const { InstructorId } = req.body;
+
+    if (!InstructorId) {
+      return res.status(400).json({
+        success: false,
+        message: 'InstructorId is required'
+      });
+    }
+
+    // Find all evaluation responses where the instructor field matches the provided InstructorId
+    const responses = await EvaluationResponse.find({ instructor: InstructorId })
+      .populate('student', 'fullName email')
+      .populate('instructor', 'fullName email')
+      .populate('evaluation', 'title category courseCode');
+
+    if (responses.length === 0) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        data: [],
+        message: 'No evaluation responses found for this instructor'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: responses.length,
+      data: responses
+    });
+
+  } catch (error) {
+    next(error);
+  }
+}

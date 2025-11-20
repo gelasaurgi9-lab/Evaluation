@@ -10,7 +10,11 @@ const DepartmentHeadHome = ({user}) => {
       <Header/>
      <div className='flex items-center mb-10'>
      <Sider/>
-     <div className='mt-20'>DEPARTMENT HEAD DASHBOARD <span className='bg-(--three) p-3 rounded-lg'>{user?.fullName || 'Department Head'}</span></div>
+     <div className='mt-2'>
+      <h1 className='text-2xl font-bold bg-(--six) p-10  m-10 text-gray-100 rounded-2xl'>
+                Hello,👋 {user?.fullName || 'Student'}
+              </h1>
+     </div>
      </div>
      <Analysis/>
     </div>

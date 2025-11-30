@@ -5,6 +5,7 @@ import { fetchAllUsers } from "../../../Store/UsersDataSlice";
 import FetchSingleGroupUser from "./FetchSingleGroupUser";
 import { useNavigate } from "react-router-dom";
 import DeleteUser from "./DeleteUser";
+import ResetPassword from "./ResetPassword";
 
 const FetchUser = () => {
   const dispatch = useDispatch();
@@ -218,6 +219,8 @@ const FetchUser = () => {
                                     dispatch(fetchAllUsers());
                                   }}
                                 />
+                        
+                                <ResetPassword userId={user._id}/>
                               </div>
                             )}
                           </div>

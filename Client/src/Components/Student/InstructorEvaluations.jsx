@@ -47,8 +47,9 @@ const InstructorEvaluations = () => {
     evaluation?.criteria?.reduce((sum, criterion) => {
       const response = responses[criterion._id];
       const score = response?.rating || 0;
-      return sum + score;
+      return sum +=score;
     }, 0) || 0;
+    console.log(totalScore)
   // Fetch users on component mount
   useEffect(() => {
     dispatch(fetchAllUsers());

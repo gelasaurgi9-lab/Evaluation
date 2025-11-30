@@ -19,7 +19,7 @@ router.use(protect);
 
 // Quality Officer routes
 router.route('/').post(authorize('quality_officer'), createEvaluationForm);
-router.route('/').get(authorize('quality_officer',"Student",'instructor','department_head'), getAllEvaluationForms);
+router.route('/').get(authorize('quality_officer',"Student",'instructor','department_head','college_dean'), getAllEvaluationForms);
 router.route('/:id/status').patch(authorize('quality_officer'), updateEvaluationStatus);
 router.route('/:id').delete(authorize('quality_officer'), deleteEvaluationForm);
 
@@ -31,14 +31,14 @@ router.route('peer-evaluation/:id')
 
 router.route('/:id/responses')
   .post(authorize('Student', 'instructor','department_head'), submitEvaluationResponse)
-  .get(authorize('quality_officer','department_head','instructor'), getEvaluationResponses);
+  .get(authorize('quality_officer','department_head','instructor','college_dean'), getEvaluationResponses);
 
 // Route to get evaluation responses by instructor ID
 router.route('/instructor-responses')
-  .post(authorize('quality_officer','department_head','instructor'), getEvaluationResponceByUserId);
+  .post(authorize('quality_officer','department_head','instructor','college_dean'), getEvaluationResponceByUserId);
 
 // Bulk fetch responses endpoint
-router.post('/responses/bulk', authorize('quality_officer','department_head','instructor'), async (req, res) => {
+router.post('/responses/bulk', authorize('quality_officer','department_head','instructor','college_dean'), async (req, res) => {
   try {
     const { responseIds } = req.body;
     

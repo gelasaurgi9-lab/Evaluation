@@ -79,3 +79,69 @@ export const fetchAllUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+export const adminResetPassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newPassword, confirmPassword } = req.body;
+
+    // 1. Input validation
+    if (!newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide new password and confirm password'
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password and confirm password do not match'
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 8 characters long'
+      });
+    }
+
+    // 2. Find user
+    const user = await UserAuth.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // 3. Update password
+    // The pre-save hook in the model will handle hashing
+    user.password = newPassword;
+    user.isDefaultPassword = false; // Clear default flag if it exists
+    user.passwordChangedAt = Date.now();
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password has been reset successfully'
+    });
+
+  } catch (error) {
+    console.error('Admin reset password error:', error);
+
+    if (error.name === 'CastError') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid user ID format'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};

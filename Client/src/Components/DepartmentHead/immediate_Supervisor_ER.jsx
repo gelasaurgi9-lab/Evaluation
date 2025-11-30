@@ -16,7 +16,7 @@ const ImmediateSupervisorER = () => {
   const { user } = useSelector((state) => state.auth);
   const { users } = useSelector((state) => state.usersData);
   const { evaluations, status, submissionStatus } = useSelector((state) => state.evaluations);
-  
+
   const [selectedInstructor, setSelectedInstructor] = useState('');
   const [selectedEvaluation, setSelectedEvaluation] = useState('');
   const [responses, setResponses] = useState({});
@@ -87,14 +87,14 @@ const ImmediateSupervisorER = () => {
     const response = responses[criterion._id];
     const score = response?.rating || 0;
     // Calculate weighted contribution: (score/100) * weight
-    const weightedScore = (score / 20) * criterion.weight;
+    const weightedScore = (score / 20) * 20;
     return sum += weightedScore;
   }, 0) || 0;
 
   // Submit evaluation
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!selectedInstructor || !selectedEvaluation) {
       setSubmitStatus({ type: 'error', message: 'Please select an instructor and evaluation' });
       return;
@@ -102,14 +102,14 @@ const ImmediateSupervisorER = () => {
 
     // Validate all criteria have been rated
     const allRated = Object.values(responses).every(response => response.rating > 0);
-    
+
     if (!allRated) {
       setSubmitStatus({ type: 'error', message: 'Please rate all criteria before submitting' });
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       const evaluationData = {
         id: selectedEvaluation,
@@ -122,12 +122,12 @@ const ImmediateSupervisorER = () => {
       };
 
       const result = await dispatch(submitEvaluationResponse(evaluationData)).unwrap();
-      
+
       if (result.success) {
         setSubmitStatus({ type: 'success', message: 'Evaluation submitted successfully!' });
         setHasSubmitted(true);
         toast.success('Evaluation submitted successfully!');
-        
+
         // Reset form after successful submission
         setTimeout(() => {
           setSelectedInstructor('');
@@ -153,7 +153,7 @@ const ImmediateSupervisorER = () => {
   const currentEvaluation = evaluations?.find(e => e._id === selectedEvaluation);
 
   // Check if already submitted for current selection
-  const alreadySubmitted = selectedInstructor && selectedEvaluation && 
+  const alreadySubmitted = selectedInstructor && selectedEvaluation &&
     checkIfAlreadySubmitted(selectedInstructor, selectedEvaluation);
 
   return (
@@ -289,7 +289,7 @@ const ImmediateSupervisorER = () => {
                 Overall Comments
               </Label>
               <Textarea
-               className="bg-gray-200"
+                className="bg-gray-200"
                 id="additional-comments"
                 placeholder="Any additional feedback or comments about the instructor's performance..."
                 value={additionalComments}

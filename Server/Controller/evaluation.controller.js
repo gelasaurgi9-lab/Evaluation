@@ -102,10 +102,10 @@ export const submitEvaluationResponse = async (req, res, next) => {
     if (allResponses.length > 0) {
       const totalScore = allResponses.reduce((sum, resp) => {
         const responseTotal = resp.responses.reduce((s, r) => s + (r.rating || 0), 0);
-        const responseAvg = responseTotal / (resp.responses.length || 1);
+        const responseAvg = responseTotal;
         return sum + responseAvg;
       }, 0);
-      evaluation.averageScore = totalScore / allResponses.length;
+      evaluation.averageScore = totalScore;
     } else {
       evaluation.averageScore = 0;
     }

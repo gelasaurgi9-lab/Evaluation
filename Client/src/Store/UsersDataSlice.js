@@ -34,8 +34,8 @@ export const updateUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || 
-        error.response?.data?.error || 
+        error.response?.data?.message ||
+        error.response?.data?.error ||
         'Failed to update user'
       );
     }
@@ -72,8 +72,8 @@ export const updateUserPassword = createAsyncThunk(
         message: error.message
       });
       return rejectWithValue(
-        error.response?.data?.message || 
-        error.response?.data?.error || 
+        error.response?.data?.message ||
+        error.response?.data?.error ||
         'Failed to update password. Please try again.'
       );
     }
@@ -90,13 +90,28 @@ export const updateInstructrStatus = createAsyncThunk(
     }
   }
 );
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(`/user/reset-password/${userId}`, {
+        newPassword: "Osu@1234",
+        confirmPassword: "Osu@1234"
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || "Failed to reset password";
+      return rejectWithValue({ message });
+    }
+  }
+);
 
 const usersDataSlice = createSlice({
   name: 'usersData',
   initialState: {
     users: [],
     currentUser: null,
-    isLoading:false,
+    isLoading: false,
     error: null,
   },
   reducers: {
@@ -120,15 +135,15 @@ const usersDataSlice = createSlice({
 
     // Fetch single user
     builder.addCase(fetchSingleUser.pending, (state) => {
-            state.isLoading = true;
+      state.isLoading = true;
 
     });
     builder.addCase(fetchSingleUser.fulfilled, (state, action) => {
-            state.isLoading = false;
+      state.isLoading = false;
       state.currentUser = action.payload;
     });
     builder.addCase(fetchSingleUser.rejected, (state, action) => {
-        state.isLoading = false;
+      state.isLoading = false;
       state.error = action.payload;
     });
 
@@ -151,19 +166,19 @@ const usersDataSlice = createSlice({
       }
     });
     // Add this in the extraReducers builder in UsersDataSlice.js
-builder.addCase(updateUserPassword.pending, (state) => {
-  state.isLoading = true;
-  state.error = null;
-});
-builder.addCase(updateUserPassword.fulfilled, (state) => {
-  state.isLoading = false;
-  state.error = null;
-  // Optionally show success message
-});
-builder.addCase(updateUserPassword.rejected, (state, action) => {
-  state.isLoading = false;
-  state.error = action.payload;
-});
+    builder.addCase(updateUserPassword.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateUserPassword.fulfilled, (state) => {
+      state.isLoading = false;
+      state.error = null;
+      // Optionally show success message
+    });
+    builder.addCase(updateUserPassword.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
 
     // Update instructor status
     builder.addCase(updateInstructrStatus.pending, (state) => {
@@ -184,7 +199,19 @@ builder.addCase(updateUserPassword.rejected, (state, action) => {
     builder.addCase(updateInstructrStatus.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
-    });
+    })
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload?.message || action.error.message;
+      });
+    ;
   },
 });
 

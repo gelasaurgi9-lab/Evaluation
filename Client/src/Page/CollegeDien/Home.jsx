@@ -3,6 +3,8 @@ import React from 'react'
 import Analysis from '../Alluser/Analysis'
 import Header from '@/Components/CollegeDien/Header'
 import Sider from '@/Components/CollegeDien/Sider'
+import ViewEvaluationResult from '@/Components/DepartmentHead/ViewEvaluationResult'
+import InstractorResultInMyDepartment from '@/Components/CollegeDien/InstractorResultInMyDepartment'
 
 
 const CollageDeanHome = ({user}) => {
@@ -11,9 +13,9 @@ const CollageDeanHome = ({user}) => {
       <Header/>
      <div className='flex items-center mb-10'>
      <Sider/>
-     <div className='mt-20'>COLLEGE DEAN DASHBOARD <span className='bg-(--three) p-3 rounded-lg'>{user.fullName}</span></div>
+     <div className='mt-20'>Hi👋 <span className='bg-(--three) p-3 rounded-lg'>{user.fullName}</span></div>
      </div>
-     <Analysis/>
+     <InstractorResultInMyDepartment/>
     </div>
   )
 }

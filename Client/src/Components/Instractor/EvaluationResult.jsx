@@ -49,7 +49,7 @@ const EvaluationResult = () => {
     
     const totalRating = allRatings.reduce((acc, rating) => acc + rating, 0);
     return {
-      average: totalRating / allRatings.length,
+      average: totalRating,
       count: filteredResponses.length
     };
   };
@@ -80,7 +80,7 @@ const EvaluationResult = () => {
                {studentAverage.average.toFixed(1)} /40%
              </div>
              <div style={{ fontSize: '16px', color: '#4caf50', marginTop: '5px' }}>
-               {'⭐'.repeat(Math.round(studentAverage.average / 20))}
+               {'⭐'.repeat(Math.round(studentAverage.average /8))}
              </div>
              <div style={{ fontSize: '12px', color: '#e7e7e0ff', marginTop: '5px' }}>
                Based on {studentAverage.count} evaluaters{studentAverage.count !== 1 ? 's' : ''}
@@ -101,7 +101,7 @@ const EvaluationResult = () => {
                {supervisorAverage.average.toFixed(1)} / 20%
              </div>
              <div style={{ fontSize: '16px', color: '#ff9800', marginTop: '5px' }}>
-               {'⭐'.repeat(Math.round(supervisorAverage.average / 20))}
+               {'⭐'.repeat(Math.round(supervisorAverage.average / 4))}
              </div>
              <div style={{ fontSize: '12px', color: '#ffffffff', marginTop: '5px' }}>
                Based on {supervisorAverage.count} evaluaters{supervisorAverage.count !== 1 ? 's' : ''}
@@ -122,7 +122,7 @@ const EvaluationResult = () => {
                {selfAverage.average.toFixed(1)} / 10%
              </div>
              <div style={{ fontSize: '16px', color: '#9c27b0', marginTop: '5px' }}>
-               {'⭐'.repeat(Math.round(selfAverage.average / 5))}
+               {'⭐'.repeat(Math.round(selfAverage.average / 2))}
              </div>
              <div style={{ fontSize: '12px', color: '#ffffffff', marginTop: '5px' }}>
                Based on {selfAverage.count} evaluaters{selfAverage.count !== 1 ? 's' : ''}

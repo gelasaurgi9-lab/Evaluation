@@ -443,10 +443,7 @@ const CreateEvaluation = () => {
                   {formData.category && `(${EVALUATION_WEIGHTS[formData.category] * 100}% of total)`}
                 </p>
               </div>
-              <div>
-                <p className="text-sm text-gray-600">Maximum Possible Score</p>
-                <p className="font-medium">{weightedMax.toFixed(1)} points</p>
-              </div>
+          
             </div>
           </div>
 

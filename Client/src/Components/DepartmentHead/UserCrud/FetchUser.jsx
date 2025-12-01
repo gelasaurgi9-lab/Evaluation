@@ -80,22 +80,14 @@ const FetchUser = () => {
     setSelectedRole("all");
   };
 
-  const handleEditUser = (userId) => {
-    console.log("Edit user:", userId);
-    // Add your edit logic here
-  };
 
-  const handleDeleteUser = (userId) => {
-    console.log("Delete user:", userId);
-    // Add your delete logic here
-  };
 
   if (isLoading)
     return (
       <div className="flex items-center justify-center h-64">
-      
-        <LoaderPinwheel className="h-18 w-18 animate-spin shadow-lg rounded-full shadow-green-200" />
-   
+
+        <LoaderPinwheel className="h-2 w-58 animate-spin shadow-lg rounded-full shadow-green-900" />
+
       </div>
     );
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
@@ -160,7 +152,7 @@ const FetchUser = () => {
               <tbody>
                 {filteredUsers.map(
                   (user) =>
-                    user.role !== "department_head" && (
+                    (user.role !== "department_head" && user.role !== "quality_officer" && user.role !== "Vice_academy" && user.role !== "Human_resours") && (
                       <tr
                         key={user._id}
                         className="hover:bg-gray-50 transition-colors"
@@ -173,13 +165,12 @@ const FetchUser = () => {
                         </td>
                         <td className="py-3 px-4 border-b">
                           <span
-                            className={`px-2 py-1 text-xs rounded-full ${
-                              user.role === "admin"
-                                ? "bg-blue-100 text-blue-800"
-                                : user.role === "instructor"
+                            className={`px-2 py-1 text-xs rounded-full ${user.role === "admin"
+                              ? "bg-blue-100 text-blue-800"
+                              : user.role === "instructor"
                                 ? "bg-green-100 text-green-800"
                                 : "bg-gray-100 text-gray-800"
-                            }`}
+                              }`}
                           >
                             {user.role || "N/A"}
                           </span>
@@ -194,9 +185,8 @@ const FetchUser = () => {
                               className="text-gray-500 hover:text-blue-500 transition-colors p-1"
                             >
                               <Plus
-                                className={`h-5 w-5 transition-transform duration-200 ${
-                                  expandedRow === user._id ? "rotate-45" : ""
-                                }`}
+                                className={`h-5 w-5 transition-transform duration-200 ${expandedRow === user._id ? "rotate-45" : ""
+                                  }`}
                               />
                             </button>
                             {expandedRow === user._id && (
@@ -219,8 +209,8 @@ const FetchUser = () => {
                                     dispatch(fetchAllUsers());
                                   }}
                                 />
-                        
-                                <ResetPassword userId={user._id}/>
+
+                                <ResetPassword userId={user._id} />
                               </div>
                             )}
                           </div>

@@ -13,10 +13,8 @@ const dispatch=useDispatch()
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
 
   const navLinks = [
-    { name: 'Dashboard', path: '/quality-office-home' },
-    { name: 'Instructors', path: '/instructors' },
-    { name: 'Evaluations', path: '/evaluations' },
-    { name: 'Reports', path: '/reports' },
+    { name: 'Vice Academy Dashboard', path: '/vice-academy-home' },
+  
   ];
   const LogOutHandler=()=>{
     dispatch(logoutUser())
@@ -61,9 +59,7 @@ const dispatch=useDispatch()
 
           {/* Right Side Icons */}
           <div className='flex items-center'>
-            <button className='p-2 text-white rounded-full hover:bg-(--five) focus:outline-none'>
-              <FiBell className='h-6 w-6' />
-            </button>
+    
             
             {/* Profile Dropdown */}
             <div className='ml-3 relative'>

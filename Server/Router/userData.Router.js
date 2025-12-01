@@ -5,7 +5,7 @@ import { adminResetPassword, deleteUser, editUser, fetchAllUser, fetchUserSingle
 const router = express.Router();
 
 // Apply both protect and authorize middlewares
-router.get('/', protect, authorize(['department_head', 'quality_officer', 'Student','instructor','college_dean']), fetchAllUser);
+router.get('/', protect, authorize(['department_head', 'quality_officer', 'Student','instructor','college_dean','Human_resours','Vice_academy']), fetchAllUser);
 router.delete('/delete-user/:id', protect, authorize('department_head'), deleteUser);
 router.put('/edit-user/:id', protect, authorize('department_head'), editUser);
 router.get('/search-user', protect, authorize('department_head','Student'), fetchUserSingle);

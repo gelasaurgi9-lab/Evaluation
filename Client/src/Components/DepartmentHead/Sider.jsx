@@ -121,19 +121,7 @@ const Sider = () => {
                 ))}
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 p-4 border-t w-64">
-                <Button 
-                  variant="ghost" 
-                  className="w-full justify-start text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-                  onClick={() => {
-                    // Handle logout
-                    console.log('Logout clicked');
-                  }}
-                >
-                  <UserX className="h-4 w-4 mr-2" />
-                  Logout
-                </Button>
-              </div>
+              
             </div>
 
             {/* Content Area */}

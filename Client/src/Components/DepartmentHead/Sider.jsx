@@ -6,7 +6,7 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetDescription,
-} from "@/components/ui/sheet";
+} from "@/Components/ui/sheet";
 import { Plus, List, User2, Users, UserPlus, UserX, UserCog } from "lucide-react";
 import { Button } from "../ui/button";
 
@@ -39,19 +39,19 @@ const Sider = () => {
           icon: <Users className="h-4 w-4 mr-2" />,
           component: <FetchUser />
         },
-   
+
       ]
     },
     {
       id: 'evaluations',
       title: 'Evaluations',
       items: [
-       
+
         {
           id: 'view-evaluations',
           label: 'View Evaluations',
           icon: <List className="h-4 w-4 mr-2" />,
-          component:<ViewEvaluation/>
+          component: <ViewEvaluation />
         }
       ]
     }
@@ -63,7 +63,7 @@ const Sider = () => {
 
   const renderContent = () => {
     if (!activeView) return null;
-    
+
     // Find the active component from menuItems
     for (const section of menuItems) {
       const item = section.items.find(item => item.id === activeView);
@@ -81,8 +81,8 @@ const Sider = () => {
           <User2 className="h-5 w-5" />
           <span className="hidden md:inline">Menu</span>
         </SheetTrigger>
-        <SheetContent 
-          side="left" 
+        <SheetContent
+          side="left"
           className="w-full sm:max-w-7xl bg-white dark:bg-gray-900 overflow-y-auto"
           aria-describedby="sheet-description"
         >
@@ -121,7 +121,7 @@ const Sider = () => {
                 ))}
               </div>
 
-              
+
             </div>
 
             {/* Content Area */}
@@ -132,7 +132,7 @@ const Sider = () => {
                 </div>
               ) : (
                 <div>
-                  <ViewEvaluationResult/>
+                  <ViewEvaluationResult />
                 </div>
               )}
             </div>

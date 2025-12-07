@@ -14,7 +14,7 @@ import {
   ArrowLeft,
   Calendar,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { toast } from "sonner";
 import logo from "../../assets/logo_2.png";
 import {
@@ -23,7 +23,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 
 const InstructorEvaluations = () => {
   const { id } = useParams();
@@ -47,9 +47,9 @@ const InstructorEvaluations = () => {
     evaluation?.criteria?.reduce((sum, criterion) => {
       const response = responses[criterion._id];
       const score = response?.rating || 0;
-      return sum +=score;
+      return sum += score;
     }, 0) || 0;
-    console.log(totalScore)
+  console.log(totalScore)
   // Fetch users on component mount
   useEffect(() => {
     dispatch(fetchAllUsers());
@@ -129,7 +129,7 @@ const InstructorEvaluations = () => {
       ).unwrap();
       navigate("/");
     } catch (error) {
- 
+
     } finally {
       setIsSubmitting(false);
     }
@@ -251,11 +251,10 @@ const InstructorEvaluations = () => {
               {evaluation.academicYear} {evaluation.semester}
             </div>
             <div
-              className={`px-3 py-1 rounded-full text-xs font-medium ${
-                evaluation.status === "active"
+              className={`px-3 py-1 rounded-full text-xs font-medium ${evaluation.status === "active"
                   ? "bg-green-100 text-green-800"
                   : "bg-gray-100 text-gray-800"
-              }`}
+                }`}
             >
               {evaluation.status}
             </div>

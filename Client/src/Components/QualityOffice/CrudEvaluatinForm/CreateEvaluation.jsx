@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Upload, FileText, UserCheck, Users, User, Plus, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select";
+import { Textarea } from "@/Components/ui/textarea";
 import { toast } from "sonner";
 import { createEvaluation } from "@/Store/EvaluationSlice";
 import { fetchAllUsers } from "@/Store/UsersDataSlice";
@@ -45,7 +45,7 @@ const CreateEvaluation = () => {
   const { user } = useSelector((state) => state.auth);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [weightError, setWeightError] = useState('');
-  
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -134,10 +134,10 @@ const CreateEvaluation = () => {
     const totalWeight = criteria.reduce((sum, criterion) => {
       return sum + (Number(criterion.weight) || 0);
     }, 0);
-    
-    const expectedWeight = EVALUATION_WEIGHTS[formData.category] ? 
+
+    const expectedWeight = EVALUATION_WEIGHTS[formData.category] ?
       EVALUATION_WEIGHTS[formData.category] * 100 : 100;
-    
+
     if (totalWeight !== expectedWeight) {
       setWeightError(`Total weight must be exactly ${expectedWeight}% for ${formData.category} evaluations`);
       return false;
@@ -158,12 +158,12 @@ const CreateEvaluation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       if (!user?._id) {
         throw new Error('User not authenticated. Please log in again.');
       }
-      
+
       // Validate weights
       if (!validateWeights(formData.criteria)) {
         setIsSubmitting(false);
@@ -173,7 +173,7 @@ const CreateEvaluation = () => {
       // Convert date strings to Date objects
       const startDate = new Date(formData.startDate);
       const endDate = new Date(formData.endDate);
-      
+
       // Ensure end date is after start date
       if (endDate <= startDate) {
         toast.error('End date must be after start date');
@@ -201,7 +201,7 @@ const CreateEvaluation = () => {
 
       const resultAction = await dispatch(createEvaluation(evaluationData));
       const result = resultAction.payload;
-      
+
       if (result?.success) {
         toast.success('Evaluation created successfully!');
         navigate('/quality-office-home');
@@ -345,12 +345,12 @@ const CreateEvaluation = () => {
               <Label>Evaluation Criteria</Label>
               {formData.category && (
                 <div className="text-sm bg-green-900 px-3 py-2 text-white rounded-md">
-                  Total Weight: {formData.criteria.reduce((sum, c) => sum + (Number(c.weight) || 0), 0)}% / 
+                  Total Weight: {formData.criteria.reduce((sum, c) => sum + (Number(c.weight) || 0), 0)}% /
                   {EVALUATION_WEIGHTS[formData.category] * 100}% required
                 </div>
               )}
             </div>
-            
+
             <div className="space-y-4">
               {formData.criteria.map((criteria, index) => (
                 <div key={index} className="p-4 border rounded-lg space-y-3">
@@ -439,11 +439,11 @@ const CreateEvaluation = () => {
               <div>
                 <p className="text-sm text-gray-600">Evaluation Type</p>
                 <p className="font-medium">
-                  {formData.category || 'Not selected'} 
+                  {formData.category || 'Not selected'}
                   {formData.category && `(${EVALUATION_WEIGHTS[formData.category] * 100}% of total)`}
                 </p>
               </div>
-          
+
             </div>
           </div>
 
@@ -470,8 +470,8 @@ const CreateEvaluation = () => {
             >
               Cancel
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={isSubmitting || !formData.category}
               className="bg-green-600 hover:bg-green-700 cursor-pointer"
             >

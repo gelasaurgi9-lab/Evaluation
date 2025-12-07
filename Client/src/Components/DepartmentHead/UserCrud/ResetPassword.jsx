@@ -10,9 +10,9 @@ import {
     DialogTitle,
     DialogFooter,
     DialogClose
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import {RotateCcw } from 'lucide-react'
+} from "@/Components/ui/dialog"
+import { Button } from "@/Components/ui/button"
+import { RotateCcw } from 'lucide-react'
 import { resetPassword } from '@/Store/UsersDataSlice'
 
 const ResetPassword = ({ userId }) => {
@@ -55,7 +55,7 @@ const ResetPassword = ({ userId }) => {
                 onClick={() => setIsDialogOpen(true)}
                 title="Reset Password"
             >
-                <RotateCcw/>
+                <RotateCcw />
             </button>
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

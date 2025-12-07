@@ -6,10 +6,10 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Label } from "@/Components/ui/label";
 import Osu from "@/assets/Osu.png";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,7 +66,7 @@ const ChangePassword = () => {
       'admin': '/quality-office-home',
       'quality_office': '/quality-office-home'
     };
-    
+
     const normalizedRole = String(role || '').toLowerCase().replace(/\s+/g, '_');
     return roleMap[normalizedRole] || '/profile';
   };
@@ -81,7 +81,7 @@ const ChangePassword = () => {
       // Get user data from Redux state
       const currentUser = user?.data || user;
       const userId = currentUser?._id;
-      
+
       if (!userId) {
         toast.error("User ID not found. Please log in again.");
         setIsLoading(false);
@@ -98,23 +98,23 @@ const ChangePassword = () => {
 
       if (updateUserPassword.fulfilled.match(resultAction)) {
         toast.success("Password updated successfully");
-        
+
         // Clear the form
         setFormData({
           currentPassword: "Osu@1234",
           newPassword: "",
           confirmPassword: "",
         });
-        
+
         // Get user role and redirect to appropriate dashboard
         const userRole = currentUser?.role;
         const dashboardPath = getDashboardPath(userRole);
-        
+
         // Small delay to ensure state updates before navigation
         setTimeout(() => {
           navigate(dashboardPath, { replace: true });
         }, 500);
-        
+
       } else if (updateUserPassword.rejected.match(resultAction)) {
         const error = resultAction.payload || "Failed to update password";
         toast.error(error);

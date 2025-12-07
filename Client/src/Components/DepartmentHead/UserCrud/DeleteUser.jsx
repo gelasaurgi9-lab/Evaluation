@@ -7,8 +7,8 @@ import {
   DialogTitle,
   DialogFooter,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "@/Components/ui/dialog";
+import { Button } from "@/Components/ui/button";
 import { Trash2 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { deleteUser } from '@/Store/UsersDataSlice';
@@ -16,7 +16,7 @@ import { deleteUser } from '@/Store/UsersDataSlice';
 const DeleteUser = ({ userId, onDelete }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
-const dispatch=useDispatch()
+  const dispatch = useDispatch()
   const handleDelete = async () => {
     try {
       setIsDeleting(true);

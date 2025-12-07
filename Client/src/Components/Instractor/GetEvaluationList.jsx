@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchEvaluations } from "@/Store/EvaluationSlice";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
 import { Calendar, User, Users, Award, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -22,21 +22,21 @@ const GetEvaluationList = () => {
   const FriendRoleEvaluation = evaluations.filter(
     (evaluation) => evaluation.category === "College_Team"
   );
-const HandleSelfEvaluating=(EvaluationId,category)=>{
-  if(category==="Self_Evaluation"){
-    navigate(`/evaluation/${EvaluationId}`)
-  }else{
-    navigate(`/evaluation/peer-evaluation/${EvaluationId}`)
-  }
+  const HandleSelfEvaluating = (EvaluationId, category) => {
+    if (category === "Self_Evaluation") {
+      navigate(`/evaluation/${EvaluationId}`)
+    } else {
+      navigate(`/evaluation/peer-evaluation/${EvaluationId}`)
+    }
 
-}
+  }
   const renderEvaluationCard = (evaluation, index, type) => {
     if (!evaluation) return null;
-    
+
     const isActive = evaluation.status === 'active';
     const title = type === 'self' ? 'Self Evaluation' : 'Peer Evaluation';
     const icon = type === 'self' ? <User className="h-5 w-5" /> : <Users className="h-5 w-5" />;
-    
+
     return (
       <Card key={index} className="w-full max-w-md mx-4 mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
         <CardHeader className="bg-(--six) p-3 text-white rounded-t-lg">
@@ -45,8 +45,8 @@ const HandleSelfEvaluating=(EvaluationId,category)=>{
               {icon}
               {title}
             </CardTitle>
-            <Badge 
-              variant={isActive ? "default" : "secondary"} 
+            <Badge
+              variant={isActive ? "default" : "secondary"}
               className={`${isActive ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400'}`}
             >
               {isActive ? 'Active' : 'Inactive'}
@@ -74,12 +74,11 @@ const HandleSelfEvaluating=(EvaluationId,category)=>{
 
           <div className="mt-6 pt-4 border-t border-gray-100">
             <button
-            onClick={()=>HandleSelfEvaluating(evaluation._id, evaluation.category)}
-              className={`w-full  py-2 px-4 rounded-md font-medium transition-colors ${
-                isActive
+              onClick={() => HandleSelfEvaluating(evaluation._id, evaluation.category)}
+              className={`w-full  py-2 px-4 rounded-md font-medium transition-colors ${isActive
                   ? 'bg-(--three) cursor-pointer text-white hover:bg-green-700'
                   : 'bg-yellow-200 text-gray-500 cursor-not-allowed'
-              }`}
+                }`}
               disabled={!isActive}
             >
               {isActive ? 'Start Evaluation' : 'Evaluation Not Available'}

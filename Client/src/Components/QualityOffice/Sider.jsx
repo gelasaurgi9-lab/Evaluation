@@ -5,7 +5,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/Components/ui/sheet";
 import { Plus, List } from "lucide-react";
 import { Button } from "../ui/button";
 import CreateEvaluation from "./CrudEvaluatinForm/CreateEvaluation";
@@ -31,7 +31,7 @@ const Sider = () => {
             <SheetTitle>Manage Evaluation Forms</SheetTitle>
             <div className="space-y-4 pt-4">
               <div className="flex gap-4">
-                <Button 
+                <Button
                   variant={activeView === 'create' ? 'default' : 'outline'}
                   onClick={() => handleButtonClick('create')}
                   className="flex-1"
@@ -39,7 +39,7 @@ const Sider = () => {
                   <Plus className="h-4 w-4 mr-2" />
                   Create Form
                 </Button>
-                <Button 
+                <Button
                   variant={activeView === 'fetch' ? 'default' : 'outline'}
                   onClick={() => handleButtonClick('fetch')}
                   className="flex-1"

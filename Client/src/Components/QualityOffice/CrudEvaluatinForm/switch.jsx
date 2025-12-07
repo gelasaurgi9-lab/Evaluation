@@ -1,4 +1,4 @@
-import { Switch as UISwitch } from "@/components/ui/switch"
+import { Switch as UISwitch } from "@/Components/ui/switch"
 import { useState } from "react"
 
 const Switch = ({ id, checked, onChange }) => {

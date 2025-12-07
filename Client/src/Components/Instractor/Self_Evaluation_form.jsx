@@ -5,10 +5,10 @@ import {
   fetchEvaluationById,
   submitEvaluationResponse,
 } from "@/Store/EvaluationSlice";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/Components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/card";
+import { Label } from "@/Components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Loader2, ArrowLeft, CheckCircle, User } from "lucide-react";
 import { toast } from "sonner";
 import logo from "../../assets/logo_2.png";
@@ -60,10 +60,10 @@ const InstructorEvaluationForm = () => {
       const response = responses[criterion._id];
       const score = response?.rating || 0;
       // Calculate weighted contribution: (score/100) * weight
-      const weightedScore = (score / 100) *100;
+      const weightedScore = (score / 100) * 100;
       return sum + weightedScore;
     }, 0) || 0;
-console.log(totalScore)
+  console.log(totalScore)
   const handleResponseChange = (criteriaId, value) => {
     // Ensure value is a number and within valid range
     let numericValue = parseInt(value) || 0;

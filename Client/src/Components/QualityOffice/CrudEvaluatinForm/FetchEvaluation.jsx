@@ -13,7 +13,7 @@ import {
 } from "../../../Store/EvaluationSlice";
 // Import the Switch component from the correct path
 // Make sure to create this component if it doesn't exist
-import Switch from "./Switch";
+import Switch from "./switch";
 
 const FetchEvaluation = () => {
   const dispatch = useDispatch();
@@ -362,11 +362,10 @@ const FetchEvaluation = () => {
                       <button
                         key={pageNum}
                         onClick={() => paginate(pageNum)}
-                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                          currentPage === pageNum
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === pageNum
                             ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
                             : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
-                        }`}
+                          }`}
                       >
                         {pageNum}
                       </button>

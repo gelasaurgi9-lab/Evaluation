@@ -87,7 +87,7 @@ export const login = async (req, res) => {
     const cookieOptions = {
             httpOnly: true,
             secure: false, // Set to false for local development
-            sameSite: 'lax', // Use 'lax' for same-site requests
+            sameSite: 'none', // Use 'lax' for same-site requests
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             path: '/'
         };

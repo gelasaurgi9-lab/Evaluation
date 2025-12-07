@@ -16,7 +16,7 @@ import {
   Clock,
   Archive
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/Components/ui/button';
 import { toast } from 'sonner';
 
 const ViewsinglIvaluation = () => {

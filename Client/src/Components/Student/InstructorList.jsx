@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../../Store/UsersDataSlice';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Button } from '@/Components/ui/button';
 import { BookOpenCheckIcon, Loader2, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { fetchEvaluations } from '@/Store/EvaluationSlice';

@@ -85,11 +85,11 @@ export const login = async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRE || "7d" }
     );
     const cookieOptions = {
-            httpOnly: true,
-            secure: false, // Set to false for local development
-            sameSite: 'none', // Use 'lax' for same-site requests
+                  httpOnly: true,
+            secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            path: '/'
+            sameSite: 'none',
+            path: '/',
         };
                 res.cookie('token', token, cookieOptions);
     // Update last login

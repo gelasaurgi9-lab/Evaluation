@@ -37,6 +37,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchEvaluations, fetchResponsesById, selectResponses } from "@/Store/EvaluationSlice";
 import { useEffect, useState } from "react";
 import { fetchAllUsers } from "@/Store/UsersDataSlice";
+import DownloadFile from "./DownloadFile";
 const EvaluationResult = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
@@ -317,6 +318,13 @@ const EvaluationResult = () => {
                         </CardContent>
                     </Card>
                 )}
+                <DownloadFile
+                    instructor={selectedInstructor}
+                    evaluatorScores={evaluatorScores}
+                    detailedStats={detailedStats}
+                    instructorEvals={instructorEvals}
+                />
+
             </div>
         );
     }
@@ -325,7 +333,7 @@ const EvaluationResult = () => {
     return (
         <div className="p-6 bg-(--one)">
             <Card >
-                
+
                 <CardContent >
                     {/* Search and Filter Component */}
                     <Search_Categorize_by_dep

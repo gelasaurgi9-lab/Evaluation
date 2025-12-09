@@ -2,6 +2,7 @@ import { fetchResponsesByInstructorId, selectResponses } from '@/Store/Evaluatio
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import DownlodResult from './DownlodResult';
+import DetailEvaluationResult from './DetailEvaluationResult';
 
 const EvaluationResult = () => {
   const responses = useSelector(selectResponses);
@@ -86,6 +87,9 @@ const EvaluationResult = () => {
               <div style={{ fontSize: '12px', color: '#e7e7e0ff', marginTop: '5px' }}>
                 Based on {studentAverage.count} evaluaters{studentAverage.count !== 1 ? 's' : ''}
               </div>
+             <div className='text-right text'>
+               <DetailEvaluationResult/>
+             </div>
             </div>
           )}
 

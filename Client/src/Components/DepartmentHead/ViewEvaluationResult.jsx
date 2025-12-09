@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Overview from './Tabs/Overview' 
-import DetailsView from './Tabs/DetailsView' 
+import Overview from './Tabs/Overview'
+import DetailsView from './Tabs/DetailsView'
 
 import {
   BarChart,
@@ -50,11 +50,12 @@ import AllInstructor from "./Tabs/AllInstructor";
 import ExportingFile from "./Tabs/ExportingFile";
 import ImmediateSupervisorER from "./immediate_Supervisor_ER";
 import { List } from "lucide-react";
+import DownloadEvaluationReport from "./DownloadEvaluationReport";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
 
 const ViewEvaluationResult = () => {
-  
+
   const dispatch = useDispatch();
   const { evaluations, status, error } = useSelector(
     (state) => state.evaluations
@@ -64,6 +65,11 @@ const ViewEvaluationResult = () => {
   const [selectedEvaluation, setSelectedEvaluation] = useState("");
   const [selectedInstructor, setSelectedInstructor] = useState("all");
   const [activeTab, setActiveTab] = useState("overview");
+
+  // Create refs for charts
+  const chartRef1 = useRef(null);
+  const chartRef2 = useRef(null);
+  const chartRefs = [chartRef1, chartRef2];
 
   useEffect(() => {
     if (status === "idle") {
@@ -82,7 +88,7 @@ const ViewEvaluationResult = () => {
       (user) =>
         user.role === "instructor" && user.department === user.department
     ) || [];
-  
+
 
 
   // Filter evaluations based on selections
@@ -117,7 +123,7 @@ const ViewEvaluationResult = () => {
       filteredEvaluations.reduce(
         (acc, curr) => acc + (curr.averageScore || 0),
         0
-      ) ,
+      ),
     totalResponses: filteredEvaluations.reduce(
       (acc, curr) => acc + (curr.responseCount || 0),
       0
@@ -277,7 +283,7 @@ const ViewEvaluationResult = () => {
             </svg>
           </CardHeader>
           <CardContent>
-    
+
             <div className="text-2xl font-bold">
               {stats.averageScore.toFixed(1)}%
 
@@ -307,7 +313,7 @@ const ViewEvaluationResult = () => {
             </svg>
           </CardHeader>
           <CardContent>
- 
+
             <div className="text-2xl font-bold">{stats.totalResponses}</div>
 
             <p className="text-xs text-muted-foreground">
@@ -317,11 +323,10 @@ const ViewEvaluationResult = () => {
         </Card>
 
         <Card
-          className={`${
-            filteredEvaluations[0]?.status === "active"
+          className={`${filteredEvaluations[0]?.status === "active"
               ? "bg-green-500"
               : "bg-red-200"
-          }`}
+            } `}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Status</CardTitle>
@@ -373,28 +378,38 @@ const ViewEvaluationResult = () => {
           <TabsTrigger value="All Instructor in my Department">
             All Instructor in my Department
           </TabsTrigger>
-          <TabsTrigger value="immediate Supervisor" className='bg-green-600 ml-10 text-(--six) cursor-pointer'><List/> immediate Supervisor</TabsTrigger>
+          <TabsTrigger value="immediate Supervisor" className='bg-green-600 ml-10 text-(--six) cursor-pointer'><List /> immediate Supervisor</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
-          <Overview filteredEvaluations={filteredEvaluations} stats={stats}/>
+          <Overview filteredEvaluations={filteredEvaluations} stats={stats} chartRefs={chartRefs} />
         </TabsContent>
 
         <TabsContent value="details">
-          <DetailsView filteredEvaluations={filteredEvaluations}/> 
+          <DetailsView filteredEvaluations={filteredEvaluations} />
         </TabsContent>
-     
+
 
         <TabsContent value="All Instructor in my Department">
-       <AllInstructor users={users} departmentInstructors={departmentInstructors} evaluations={evaluations}/>
-      
+          <AllInstructor users={users} departmentInstructors={departmentInstructors} evaluations={evaluations} />
+
         </TabsContent>
 
-           <TabsContent value="immediate Supervisor" >
-         <ImmediateSupervisorER users={users} evaluations={evaluations} />
+        <TabsContent value="immediate Supervisor" >
+          <ImmediateSupervisorER users={users} evaluations={evaluations} />
         </TabsContent>
       </Tabs>
 
+      {/* Download Report Button */}
+      <div className="mt-6 flex justify-end">
+        <DownloadEvaluationReport
+          filteredEvaluations={filteredEvaluations}
+          stats={stats}
+          title="Instructor Evaluation Report"
+          fileName="evaluation_report.pdf"
+          chartRefs={activeTab === 'overview' ? chartRefs : []}
+        />
+      </div>
     </div>
   );
 };

@@ -32,7 +32,7 @@ const evaluationFormSchema = new Schema({
   semester: {
     type: String,
     enum: {
-      values: ['Spring', 'Summer', 'Fall'],
+      values: ['Semester I', 'Semester II'],
       message: 'Semester must be Spring, Summer, or Fall'
     },
     required: [true, 'Semester is required']

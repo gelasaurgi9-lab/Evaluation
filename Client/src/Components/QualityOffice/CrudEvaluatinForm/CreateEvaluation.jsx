@@ -50,7 +50,7 @@ const CreateEvaluation = () => {
     title: "",
     description: "",
     academicYear: new Date().getFullYear().toString(),
-    semester: "Spring",
+    semester: "semeste I",
     category: "",
     startDate: "",
     endDate: "",
@@ -298,13 +298,12 @@ const CreateEvaluation = () => {
                 onValueChange={(value) => handleSelectChange("semester", value)}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-[180px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Spring">Spring</SelectItem>
-                  <SelectItem value="Summer">Summer</SelectItem>
-                  <SelectItem value="Fall">Fall</SelectItem>
+                  <SelectItem value="Semester I">Semester I</SelectItem>
+                  <SelectItem value="Semester II">Semester II</SelectItem>
                 </SelectContent>
               </Select>
             </div>

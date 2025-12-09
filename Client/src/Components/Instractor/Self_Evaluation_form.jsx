@@ -81,15 +81,6 @@ const InstructorEvaluationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all criteria have been rated
-    const allRated = Object.values(responses).every(
-      (response) => response.rating > 0
-    );
-
-    if (!allRated) {
-      toast.error("Please rate all criteria before submitting");
-      return;
-    }
 
     try {
       await dispatch(

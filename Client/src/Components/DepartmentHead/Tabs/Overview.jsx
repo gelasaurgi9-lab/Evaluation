@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, forwardRef } from 'react'
 import {
   BarChart,
   Bar,
@@ -22,7 +22,7 @@ import {
   CardDescription,
 } from "@/Components/ui/card";
 
-const Overview = ({ filteredEvaluations = [], stats = {} }) => {
+const Overview = ({ filteredEvaluations = [], stats = {}, chartRefs = [] }) => {
   // Check if we have data to render
   const hasData = filteredEvaluations?.length > 0 && stats?.completionRate !== undefined;
 
@@ -30,7 +30,7 @@ const Overview = ({ filteredEvaluations = [], stats = {} }) => {
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         {/* Score Distribution Chart */}
-        <Card className="w-full">
+        <Card className="w-full" ref={chartRefs[0]}>
           <CardHeader>
             <CardTitle>Score Distribution</CardTitle>
           </CardHeader>
@@ -64,7 +64,7 @@ const Overview = ({ filteredEvaluations = [], stats = {} }) => {
         </Card>
 
         {/* Response Rate Chart */}
-        <Card className="w-full">
+        <Card className="w-full" ref={chartRefs[1]}>
           <CardHeader>
             <CardTitle>Response Rate</CardTitle>
           </CardHeader>
@@ -77,26 +77,26 @@ const Overview = ({ filteredEvaluations = [], stats = {} }) => {
               ) : (
                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                   <PieChart>
-                  <Pie
-                    data={[
-                      { name: "Completed", value: stats.completionRate },
-                      { name: "Pending", value: 100 - (stats.completionRate || 0) },
-                    ]}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={80}
-                    fill="#12693a"
-                    dataKey="value"
-                    label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
-                    }
-                  >
-                    <Cell fill="#0088FE" />
-                    <Cell fill="#FF8042" />
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
-                  <Legend />
+                    <Pie
+                      data={[
+                        { name: "Completed", value: stats.completionRate },
+                        { name: "Pending", value: 100 - (stats.completionRate || 0) },
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={80}
+                      fill="#12693a"
+                      dataKey="value"
+                      label={({ name, percent }) =>
+                        `${name}: ${(percent * 100).toFixed(0)}%`
+                      }
+                    >
+                      <Cell fill="#0088FE" />
+                      <Cell fill="#FF8042" />
+                    </Pie>
+                    <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                    <Legend />
                   </PieChart>
                 </ResponsiveContainer>
               )}

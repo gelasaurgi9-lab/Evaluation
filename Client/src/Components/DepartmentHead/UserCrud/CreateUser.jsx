@@ -138,7 +138,7 @@ const CreateUser = ({ onSuccess }) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email (Optional)</Label>
+          <Label htmlFor="email">Email</Label>
           <Input
             id="email"
             name="email"
@@ -147,6 +147,7 @@ const CreateUser = ({ onSuccess }) => {
             value={formData.email}
             onChange={handleChange}
             className={formErrors.email ? "border-red-500" : ""}
+            required
           />
           {formErrors.email && (
             <p className="text-sm text-red-500">{formErrors.email}</p>

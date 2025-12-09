@@ -6,6 +6,7 @@ import FetchSingleGroupUser from "./FetchSingleGroupUser";
 import { useNavigate } from "react-router-dom";
 import DeleteUser from "./DeleteUser";
 import ResetPassword from "./ResetPassword";
+import DownloadReport from "./DownloadReport";
 
 const FetchUser = () => {
   const dispatch = useDispatch();
@@ -92,12 +93,24 @@ const FetchUser = () => {
     );
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
+  const displayableUsers = filteredUsers.filter(user =>
+    user.role !== "department_head" &&
+    user.role !== "quality_officer" &&
+    user.role !== "Vice_academy" &&
+    user.role !== "Human_resours"
+  );
+
   return (
     <div className="p-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h2 className="text-2xl font-bold">
           {showAllUsers ? "All Users" : `Group ${selectedGroup} Users`}
         </h2>
+        <DownloadReport
+          data={displayableUsers}
+          title={showAllUsers ? "All Users Report" : `Group ${selectedGroup} Users Report`}
+          fileName="users_report.pdf"
+        />
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -150,73 +163,72 @@ const FetchUser = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map(
-                  (user) =>
-                    (user.role !== "department_head" && user.role !== "quality_officer" && user.role !== "Vice_academy" && user.role !== "Human_resours") && (
-                      <tr
-                        key={user._id}
-                        className="hover:bg-gray-50 transition-colors"
-                      >
-                        <td className="py-3 px-4 border-b">
-                          {user.fullName || "N/A"}
-                        </td>
-                        <td className="py-3 px-4 border-b">
-                          {user.username || "N/A"}
-                        </td>
-                        <td className="py-3 px-4 border-b">
-                          <span
-                            className={`px-2 py-1 text-xs rounded-full ${user.role === "admin"
-                              ? "bg-blue-100 text-blue-800"
-                              : user.role === "instructor"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-gray-100 text-gray-800"
-                              }`}
+                {displayableUsers.map(
+                  (user) => (
+                    <tr
+                      key={user._id}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="py-3 px-4 border-b">
+                        {user.fullName || "N/A"}
+                      </td>
+                      <td className="py-3 px-4 border-b">
+                        {user.username || "N/A"}
+                      </td>
+                      <td className="py-3 px-4 border-b">
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full ${user.role === "admin"
+                            ? "bg-blue-100 text-blue-800"
+                            : user.role === "instructor"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                            }`}
+                        >
+                          {user.role || "N/A"}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 border-b">
+                        {user.email || "N/A"}
+                      </td>
+                      <td className="py-3 px-4 border-b">
+                        <div className="flex items-center">
+                          <button
+                            onClick={() => toggleRow(user._id)}
+                            className="text-gray-500 hover:text-blue-500 transition-colors p-1"
                           >
-                            {user.role || "N/A"}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 border-b">
-                          {user.email || "N/A"}
-                        </td>
-                        <td className="py-3 px-4 border-b">
-                          <div className="flex items-center">
-                            <button
-                              onClick={() => toggleRow(user._id)}
-                              className="text-gray-500 hover:text-blue-500 transition-colors p-1"
-                            >
-                              <Plus
-                                className={`h-5 w-5 transition-transform duration-200 ${expandedRow === user._id ? "rotate-45" : ""
-                                  }`}
+                            <Plus
+                              className={`h-5 w-5 transition-transform duration-200 ${expandedRow === user._id ? "rotate-45" : ""
+                                }`}
+                            />
+                          </button>
+                          {expandedRow === user._id && (
+                            <div className="flex gap-2 ml-2">
+                              <button
+                                onClick={() =>
+                                  navigate(`/users/edit/${user._id}`)
+                                }
+                                className="text-blue-500 hover:text-blue-700 transition-colors p-1"
+                                title="Edit user"
+                              >
+                                <Edit className="h-5 w-5" />
+                              </button>
+                              <DeleteUser
+                                userId={user._id}
+                                onDelete={async (userId) => {
+                                  // Call your delete API here
+                                  await deleteUserFromAPI(userId);
+                                  // Optionally refresh the user list
+                                  dispatch(fetchAllUsers());
+                                }}
                               />
-                            </button>
-                            {expandedRow === user._id && (
-                              <div className="flex gap-2 ml-2">
-                                <button
-                                  onClick={() =>
-                                    navigate(`/users/edit/${user._id}`)
-                                  }
-                                  className="text-blue-500 hover:text-blue-700 transition-colors p-1"
-                                  title="Edit user"
-                                >
-                                  <Edit className="h-5 w-5" />
-                                </button>
-                                <DeleteUser
-                                  userId={user._id}
-                                  onDelete={async (userId) => {
-                                    // Call your delete API here
-                                    await deleteUserFromAPI(userId);
-                                    // Optionally refresh the user list
-                                    dispatch(fetchAllUsers());
-                                  }}
-                                />
 
-                                <ResetPassword userId={user._id} />
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    )
+                              <ResetPassword userId={user._id} />
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )
                 )}
               </tbody>
             </table>

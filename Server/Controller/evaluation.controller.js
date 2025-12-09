@@ -45,7 +45,7 @@ export const submitEvaluationResponse = async (req, res, next) => {
 
     // Get evaluation form
     const evaluation = await EvaluationForm.findById(id);
-    
+
     if (!evaluation) {
       return res.status(404).json('Evaluation form not found', 404);
     }
@@ -64,12 +64,12 @@ export const submitEvaluationResponse = async (req, res, next) => {
         { instructor: userId }
       ]
     };
-    
+
     // If instructorId is provided (peer/self evaluation), add it to the query
     if (instructorId) {
       existingResponseQuery.instructor = instructorId;
     }
-    
+
     const existingResponse = await EvaluationResponse.findOne(existingResponseQuery);
 
     if (existingResponse) {
@@ -96,7 +96,7 @@ export const submitEvaluationResponse = async (req, res, next) => {
     // Add response to evaluation
     evaluation.responses.push(response._id);
     evaluation.responseCount = evaluation.responses.length;
-    
+
     // Calculate average score from all responses
     const allResponses = await EvaluationResponse.find({ evaluation: id });
     if (allResponses.length > 0) {
@@ -109,7 +109,7 @@ export const submitEvaluationResponse = async (req, res, next) => {
     } else {
       evaluation.averageScore = 0;
     }
-    
+
     await evaluation.save();
 
     res.status(201).json({
@@ -150,17 +150,17 @@ export const getEvaluationForm = async (req, res, next) => {
 
     // Check if user has permission to view this evaluation
     if (req.user.role === 'student' && evaluation.category === 'instructors') {
-    return res.status(statusCode).json({
-  success: false,
-  error: 'Error message'
-});
+      return res.status(statusCode).json({
+        success: false,
+        error: 'Error message'
+      });
     }
 
     if (req.user.role === 'instructor' && evaluation.category === 'Students') {
-return res.status(statusCode).json({
-  success: false,
-  error: 'Error message'
-});
+      return res.status(statusCode).json({
+        success: false,
+        error: 'Error message'
+      });
     }
 
     res.status(200).json({
@@ -191,11 +191,11 @@ export const deleteEvaluationForm = async (req, res, next) => {
 export const getEvaluationResponses = async (req, res, next) => {
   try {
     const { id } = req.params;
-  
+
     const responses = await EvaluationResponse.find({ _id: id })
       .populate('student', 'fullName email')
       .populate('instructor', 'fullName email');
-    
+
     // If no responses found by _id, try the normal evaluation field query
     if (responses.length === 0) {
 
@@ -218,19 +218,52 @@ export const getEvaluationResponses = async (req, res, next) => {
     next(error);
   }
 };
-export const updateEvaluationStatus=async(req,res)=>{
-     try {
-      const {id}=req.params;
-      const {status}=req.body;
-      const evaluation=await EvaluationForm.findByIdAndUpdate(id,{status});
-      res.status(200).json({
-        success:true,
-        data:evaluation
-      })
-     } catch (error) {
-       next(error);
-     }
+export const updateEvaluationStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const evaluation = await EvaluationForm.findByIdAndUpdate(id, { status });
+    res.status(200).json({
+      success: true,
+      data: evaluation
+    })
+  } catch (error) {
+    next(error);
+  }
 }
+
+export const updateEvaluation = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { startDate, endDate, semester } = req.body;
+
+    const updateData = {};
+    if (startDate) updateData.startDate = startDate;
+    if (endDate) updateData.endDate = endDate;
+    if (semester) updateData.semester = semester;
+
+    const evaluation = await EvaluationForm.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    );
+
+    if (!evaluation) {
+      return res.status(404).json({
+        success: false,
+        message: 'Evaluation not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: evaluation
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getEvaluationResponceByUserId = async (req, res, next) => {
   try {
     const { InstructorId } = req.body;

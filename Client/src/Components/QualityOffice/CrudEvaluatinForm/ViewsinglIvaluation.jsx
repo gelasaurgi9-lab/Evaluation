@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEvaluationById } from '@/Store/EvaluationSlice';
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Users, 
-  BookOpen, 
-  FileText, 
+import {
+  ArrowLeft,
+  Calendar,
+  Users,
+  BookOpen,
+  FileText,
   Award,
   Loader2,
   Edit,
@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import { toast } from 'sonner';
+import EditTime from './EditTime';
 
 const ViewsinglIvaluation = () => {
   const { id } = useParams();
@@ -25,10 +26,10 @@ const ViewsinglIvaluation = () => {
   const dispatch = useDispatch();
   const { evaluation: evaluationData, status, error } = useSelector((state) => state.evaluations);
   const [activeTab, setActiveTab] = useState('overview');
-  
+
   // Handle both nested (response.data) and flat data structures
   const evaluation = evaluationData?.data || evaluationData;
-  
+
   // Debug log
   useEffect(() => {
     console.log('Current evaluation data:', evaluation);
@@ -63,7 +64,7 @@ const ViewsinglIvaluation = () => {
   const getStatusBadge = (status) => {
     const baseStyle = 'px-2 py-1 text-xs font-medium rounded-full';
     const statusLower = status?.toLowerCase?.() || 'draft'; // Default to 'draft' if status is undefined
-    
+
     switch (statusLower) {
       case 'active':
         return (
@@ -128,7 +129,7 @@ const ViewsinglIvaluation = () => {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="text-center py-10">
             <p className="text-red-500 mb-4">Error: {error || 'Failed to load evaluation'}</p>
-            <Button 
+            <Button
               onClick={() => navigate('/quality-office-home')}
               variant="outline"
             >
@@ -146,7 +147,7 @@ const ViewsinglIvaluation = () => {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="text-center py-10">
             <p className="text-gray-500 mb-4">No evaluation found</p>
-            <Button 
+            <Button
               onClick={() => navigate('/quality-office-home')}
               variant="outline"
             >
@@ -175,7 +176,7 @@ const ViewsinglIvaluation = () => {
               </Button>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">{evaluation.title}</h1>
-                <p className="text-gray-600 text-[15px] mt-1">{evaluation.description ||''}</p>
+                <p className="text-gray-600 text-[15px] mt-1">{evaluation.description || ''}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -198,15 +199,14 @@ const ViewsinglIvaluation = () => {
         {/* Tabs */}
         <div className="border-b border-gray-200 px-6 mt-6">
           <div className="flex gap-2">
-            {['overview', 'criteria', 'questions'].map((tab) => (
+            {['overview', 'criteria'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-3 text-sm font-medium transition-colors capitalize ${
-                  activeTab === tab
-                    ? 'text-green-600 border-b-2 border-green-600'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-4 py-3 text-sm font-medium transition-colors capitalize ${activeTab === tab
+                  ? 'text-green-600 border-b-2 border-green-600'
+                  : 'text-gray-600 hover:text-gray-900'
+                  }`}
               >
                 {tab}
               </button>
@@ -289,9 +289,9 @@ const ViewsinglIvaluation = () => {
                   <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm text-purple-600 font-semibold">Total Questions</p>
+                        <p className="text-sm text-purple-600 font-semibold">Total criteria</p>
                         <p className="text-2xl font-bold text-purple-900">
-                          {evaluation.questions?.length || 0}
+                          {evaluation?.criteria?.length || 0}
                         </p>
                       </div>
                       <FileText className="h-8 w-8 text-purple-600" />
@@ -347,57 +347,14 @@ const ViewsinglIvaluation = () => {
             </div>
           )}
 
-          {activeTab === 'questions' && (
-            <div className="space-y-4">
-              {evaluation.questions && evaluation.questions.length > 0 ? (
-                evaluation.questions.map((question, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">
-                            {question.questionType?.replace('_', ' ').toUpperCase()}
-                          </span>
-                          {question.required && (
-                            <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-semibold">
-                              Required
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-gray-900 font-medium">{question.questionText}</p>
-                        {question.options && question.options.length > 0 && (
-                          <div className="mt-3 space-y-1">
-                            {question.options.map((option, optIndex) => (
-                              <div key={optIndex} className="text-sm text-gray-600 flex items-center gap-2">
-                                <span className="w-6 h-6 flex items-center justify-center bg-gray-100 rounded text-xs font-semibold">
-                                  {optIndex + 1}
-                                </span>
-                                <span>{option.text}</span>
-                                {option.value !== undefined && (
-                                  <span className="text-xs text-gray-500">({option.value})</span>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-10 text-gray-500">
-                  No questions defined for this evaluation.
-                </div>
-              )}
-            </div>
-          )}
-
-          
         </div>
+        <EditTime
+          evaluation={evaluation}
+          onUpdate={() => dispatch(fetchEvaluationById(id))}
+        />
       </div>
     </div>
   );
 };
 
 export default ViewsinglIvaluation;
-

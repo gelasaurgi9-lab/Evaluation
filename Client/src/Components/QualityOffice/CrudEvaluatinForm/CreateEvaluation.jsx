@@ -446,18 +446,7 @@ const CreateEvaluation = () => {
             </div>
           </div>
 
-          {/* Additional Instructions */}
-          <div className="space-y-2">
-            <Label htmlFor="description">Additional Instructions (Optional)</Label>
-            <Textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Any additional instructions for evaluators..."
-              rows={3}
-            />
-          </div>
+       
 
           {/* Form Actions */}
           <div className="flex justify-end space-x-3 pt-4">

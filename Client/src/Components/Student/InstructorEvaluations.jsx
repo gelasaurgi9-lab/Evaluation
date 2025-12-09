@@ -317,23 +317,6 @@ const InstructorEvaluations = () => {
             </div>
           ))}
 
-          {/* Overall Comment */}
-          <div className="mt-8">
-            <p className="text-[16px] text-(--two) bg-(--six) p-2 my-3">
-              TOTAL SCORE: {totalScore} /{" "}
-              {evaluation?.criteria?.reduce((sum, c) => sum + c.weight, 0) || 0}
-            </p>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Overall Comments
-            </label>
-            <textarea
-              rows={4}
-              className="w-full bg-white text-[16px] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Any additional comments about the instructor..."
-              value={overallComment}
-              onChange={(e) => setOverallComment(e.target.value)}
-            />
-          </div>
 
           {/* Submit Button */}
           <div className="mt-8 flex justify-end">

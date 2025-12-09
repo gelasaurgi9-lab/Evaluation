@@ -283,20 +283,6 @@ const ImmediateSupervisorER = () => {
               </div>
             ))}
 
-            {/* Additional Comments */}
-            <div className="space-y-2">
-              <Label htmlFor="additional-comments" className="text-gray-200">
-                Overall Comments
-              </Label>
-              <Textarea
-                className="bg-gray-200"
-                id="additional-comments"
-                placeholder="Any additional feedback or comments about the instructor's performance..."
-                value={additionalComments}
-                onChange={(e) => setAdditionalComments(e.target.value)}
-                rows={4}
-              />
-            </div>
 
             {/* Total Score Display */}
             <div className="flex justify-between pt-6 border-t">

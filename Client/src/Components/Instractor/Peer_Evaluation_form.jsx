@@ -206,18 +206,7 @@ const Peer_Evaluation_form = () => {
                 </div>
               ))}
 
-              <div className="space-y-2">
-                <Label className="block text-sm font-medium text-gray-700">
-                  Overall Comments
-                </Label>
-                <textarea
-                  value={overallComment}
-                  onChange={(e) => setOverallComment(e.target.value)}
-                  className="w-full px-3 py-3 text-[18px] border border-gray-300 rounded-md"
-                  rows="4"
-                  placeholder="Provide any additional comments about this evaluation..."
-                />
-              </div>
+           
             </div>
 
             <div className="flex justify-between pt-6">

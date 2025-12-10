@@ -100,13 +100,7 @@ const ImmediateSupervisorER = () => {
       return;
     }
 
-    // Validate all criteria have been rated
-    const allRated = Object.values(responses).every(response => response.rating > 0);
-
-    if (!allRated) {
-      setSubmitStatus({ type: 'error', message: 'Please rate all criteria before submitting' });
-      return;
-    }
+   
 
     setIsSubmitting(true);
 
@@ -139,11 +133,11 @@ const ImmediateSupervisorER = () => {
         }, 3000);
       } else {
         setSubmitStatus({ type: 'error', message: result.message || 'Failed to submit evaluation' });
-        toast.error(result.message || 'Failed to submit evaluation');
+        toast.error(result.data.message || 'Failed to submit evaluation');
       }
     } catch (error) {
       setSubmitStatus({ type: 'error', message: 'An error occurred while submitting the evaluation' });
-      toast.error('An error occurred while submitting the evaluation');
+  
     } finally {
       setIsSubmitting(false);
     }
